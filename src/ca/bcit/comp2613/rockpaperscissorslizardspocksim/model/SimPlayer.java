@@ -1,57 +1,40 @@
-/**
- * 
- */
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
 
-/**
- * @author A00913377
- *
- */
-public class LivePlayer {
-
-	/**
-	 * @param args
-	 */
-	private long id;
+public class SimPlayer {
+	
 	private String name;		
 	private Integer roundsPlayed;
 	private Integer roundsWon;
 	private Integer roundsLost;
-	private Integer roundsTied;	
-		
-	public LivePlayer(long id, String name, Integer roundsPlayed,
-			Integer roundsWon, Integer roundsLost, Integer roundsTied) {
+	private Integer roundsTied;
+	private Gesture gestureBias;
+	
+	/**
+	 * @param name
+	 * @param roundsPlayed
+	 * @param roundsWon
+	 * @param roundsLost
+	 * @param roundsTied
+	 * @param gestureBias
+	 */
+	public SimPlayer(String name, Integer roundsPlayed, Integer roundsWon,
+			Integer roundsLost, Integer roundsTied, Gesture gestureBias) {
 		super();
-		this.id = id;
 		this.name = name;
 		this.roundsPlayed = roundsPlayed;
 		this.roundsWon = roundsWon;
 		this.roundsLost = roundsLost;
 		this.roundsTied = roundsTied;
+		this.gestureBias = gestureBias;
 	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	public String toString(){
-	
 		return "";
-	}
-	
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	/**
@@ -123,6 +106,21 @@ public class LivePlayer {
 	public void setRoundsTied(Integer roundsTied) {
 		this.roundsTied = roundsTied;
 	}
+
+	/**
+	 * @return the gestureBias
+	 */
+	public Gesture getGestureBias() {
+		return gestureBias;
+	}
+
+	/**
+	 * @param gestureBias the gestureBias to set
+	 */
+	public void setGestureBias(Gesture gestureBias) {
+		this.gestureBias = gestureBias;
+	}
+	
 	
 
 }

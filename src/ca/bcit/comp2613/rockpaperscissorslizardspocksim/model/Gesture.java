@@ -1,19 +1,26 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
 
+/**
+ * @author A00913377
+ *
+ */
 public class Gesture {
 
+	private long id;
 	private String name;
 	private String displayImage;	
 		
 	/**
+	 * @param id
 	 * @param name
 	 * @param displayImage
 	 */
-	public Gesture(String name, String displayImage) {
+	public Gesture(long id, String name, String displayImage) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.displayImage = displayImage;
-	}
+	}	
 	
 	public String toString(){
 		return "";
@@ -43,7 +50,21 @@ public class Gesture {
 	public void setDisplayImage(String displayImage) {
 		this.displayImage = displayImage;
 	}
-	
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	
 	
 }

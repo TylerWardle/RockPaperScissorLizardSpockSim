@@ -1,7 +1,12 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
 
+/**
+ * @author A00913377
+ *
+ */
 public class SimPlayer {
 	
+	private long id;
 	private String name;		
 	private Integer roundsPlayed;
 	private Integer roundsWon;
@@ -17,9 +22,10 @@ public class SimPlayer {
 	 * @param roundsTied
 	 * @param gestureBias
 	 */
-	public SimPlayer(String name, Integer roundsPlayed, Integer roundsWon,
+	public SimPlayer(long id, String name, Integer roundsPlayed, Integer roundsWon,
 			Integer roundsLost, Integer roundsTied, Gesture gestureBias) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.roundsPlayed = roundsPlayed;
 		this.roundsWon = roundsWon;
@@ -35,6 +41,21 @@ public class SimPlayer {
 	
 	public String toString(){
 		return "";
+	}
+
+	
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	/**

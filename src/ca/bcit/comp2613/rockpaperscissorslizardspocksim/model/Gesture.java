@@ -1,7 +1,7 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
 
 /**
- * @author A00913377
+ * @author A00913377 Tyler Wardle
  *
  */
 public class Gesture {

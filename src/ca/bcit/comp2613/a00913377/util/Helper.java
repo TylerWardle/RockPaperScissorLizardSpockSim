@@ -2,6 +2,7 @@
  * 
  */
 package ca.bcit.comp2613.a00913377.util;
+import java.util.ArrayList;
 
 /**
  * @author A00913377
@@ -12,9 +13,7 @@ public class Helper {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
+	private ArryaList<Player> players;
+	
 
 }

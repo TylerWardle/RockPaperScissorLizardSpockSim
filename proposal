@@ -1,4 +1,5 @@
 Rock Paper Scissors Lizard Spock simulator or RPSLSSim
+updated May 26, 2014
 
 This application will simulate a single elimination tournament of RPSLS with a 
 random but even number of initial players greater than 2. The option of any number of user 
@@ -10,23 +11,18 @@ rules here: http://en.wikipedia.org/wiki/Rock-paper-scissors-lizard-Spock
 
 Classes
 
-	livePlayer
+	Player
 		-name		
 		-roundsPlayed
 		-roundsWon
 		-roundsLost
 		-roundsTied
 
-	simPlayer
-		-name		
-		-roundsPlayed
-		-roundsWon
-		-roundsLost
-		-roundsTied
+	SimPlayer extends Player
 		-gestureBias
 	
 
-	validGestures
+	ValidGestures
 		-gestures
 		
 

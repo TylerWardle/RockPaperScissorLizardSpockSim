@@ -2,7 +2,7 @@ package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
 import java.util.ArrayList;
 
 /**
- * @author A00913377
+ * @author A00913377 Tyler Wardle
  *
  */
 public class ValidGestures {

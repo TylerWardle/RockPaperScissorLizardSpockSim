@@ -4,6 +4,8 @@
 package ca.bcit.comp2613.a00913377.util;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gesture;
@@ -18,7 +20,7 @@ public class Helper {
 	 * @param args
 	 */
 	private ArrayList<Player> players;
-	private static int NAME_LENGTH = 4;
+	private static int RANDOM_NAME_LENGTH = 3;
 	
 	public Helper(){
 		players = new ArrayList<Player>();
@@ -33,19 +35,19 @@ public class Helper {
 		for (int i = 0; i < amount; i++){
 			if (random.nextBoolean()){
 				players.add(new Player(i, 
-										generateName(),
-										random.nextInt(),
-										random.nextInt(),
-										random.nextInt(),
-										random.nextInt()));
+								generateName(),
+								random.nextInt(),
+								random.nextInt(),
+								random.nextInt(),
+								random.nextInt()));
 			}else{
 				players.add(new SimPlayer(i, 
-						generateName(),
-						random.nextInt(),
-						random.nextInt(),
-						random.nextInt(),
-						random.nextInt(),
-						new Gesture(random.nextLong(),
+								generateName(),
+								random.nextInt(),
+								random.nextInt(),
+								random.nextInt(),
+								random.nextInt(),
+								new Gesture(random.nextLong(),
 								"" +random.nextInt(),
 								"" +random.nextInt())));
 			}
@@ -58,32 +60,36 @@ public class Helper {
 		String name = "";
 		int letterIndex;
 		
-		for (int i = 0; i < NAME_LENGTH; i++){
+		for (int i = 0; i < RANDOM_NAME_LENGTH; i++){			
 			letterIndex = random.nextInt(alphabet.length());
-			name.concat(alphabet.substring(letterIndex,letterIndex));			
+			name = name.concat(alphabet.substring(letterIndex,letterIndex + 1));		
+						
 		}
 				
 		return name;
 	}
 
 	public ArrayList<Player> findPlayerByName(String name){
-		ArrayList<Player> players = new ArrayList<Player>();
-
-		for (Player player: players){
-			if (player.getName().equals(name)){
-				players.add(player);
-			}
-		}
-		return players;				
-	}
-	public ArrayList<Player> findPlayerByNameRegex(String name){
-		ArrayList<Player> players = new ArrayList<Player>();
+		ArrayList<Player> foundPlayers = new ArrayList<Player>();
 		
 		for (Player player: players){
 			if (player.getName().equals(name)){
-				players.add(player);
+				foundPlayers.add(player);
 			}
 		}
+		return foundPlayers;				
+	}
+	public ArrayList<Player> findPlayerByNameRegex(String name){
+		ArrayList<Player> foundPlayers = new ArrayList<Player>();
+		
+		for (Player player: players){
+			Pattern pattern = Pattern.compile(name);
+			Matcher matcher = pattern.matcher(player.getName());
+			if (matcher.find()){
+				foundPlayers.add(player);
+			}
+		}
+		return foundPlayers;
 	}
 	
 }

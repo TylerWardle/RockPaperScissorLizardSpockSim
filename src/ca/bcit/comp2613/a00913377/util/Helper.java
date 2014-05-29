@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gestures;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gesture;
@@ -47,9 +49,10 @@ public class Helper {
 								random.nextInt(),
 								random.nextInt(),
 								random.nextInt(),
-								new Gesture(random.nextLong(),
-								"" +random.nextInt(),
-								"" +random.nextInt())));
+								Gestures.getRandomGesture())); 
+								//new Gesture(random.nextLong(),
+								//"" +random.nextInt(),
+								//"" +random.nextInt())));
 			}
 		}		
 		

@@ -1,0 +1,3 @@
+May 28, 2014
+	added a Gestures ENUM class to replace the gesture data class
+	adjusted Helper and TestDriver to make use of the Gestures Enum

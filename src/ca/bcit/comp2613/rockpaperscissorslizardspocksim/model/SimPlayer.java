@@ -6,13 +6,13 @@ package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
  */
 public class SimPlayer extends Player{
 	
-	private Gesture gestureBias;
+	private Gestures gestureBias;
 	
 	/**
 	 * @param gestureBias
 	 */
 	public SimPlayer(long id, String name, Integer roundsPlayed, Integer roundsWon,
-			Integer roundsLost, Integer roundsTied, Gesture gestureBias) {
+			Integer roundsLost, Integer roundsTied, Gestures gestureBias) {
 		super(id, name, roundsPlayed, roundsWon, roundsLost, roundsTied);
 		this.gestureBias = gestureBias;
 	}
@@ -24,14 +24,14 @@ public class SimPlayer extends Player{
 	/**
 	 * @return the gestureBias
 	 */
-	public Gesture getGestureBias() {
+	public Gestures getGestureBias() {
 		return gestureBias;
 	}
 
 	/**
 	 * @param gestureBias the gestureBias to set
 	 */
-	public void setGestureBias(Gesture gestureBias) {
+	public void setGestureBias(Gestures gestureBias) {
 		this.gestureBias = gestureBias;
 	}
 	

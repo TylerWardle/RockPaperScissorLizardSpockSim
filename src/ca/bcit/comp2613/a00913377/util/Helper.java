@@ -15,7 +15,7 @@ import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gesture;
  *
  */
 public class Helper {
-
+   
 	/**
 	 * @param args
 	 */

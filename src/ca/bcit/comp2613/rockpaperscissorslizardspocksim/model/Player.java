@@ -1,19 +1,35 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
+import java.util.ArrayList;
 
+/**
+ * @author A00913377 Tyler Wardle
+ * generates objects which represent RPSLS players 
+ */
 public class Player {
-	/**
-	 * @author A00913377 Tyler Wardle
-	 *
-	 */
+	
 	private long id;
 	private String name;	
 	private Integer roundsPlayed;
 	private Integer roundsWon;
 	private Integer roundsLost;
 	private Integer roundsTied;	
-			
+	private Player teamCaptain;
+	private ArrayList<Player> teamMembers;
+		
+	/**
+	 * Default constructor
+	 * 
+	 * @param id as a long
+	 * @param name as a String
+	 * @param roundsPlayer as an int
+	 * @param roundsWon as an int
+	 * @param roundsLost as an int
+	 * @param roundsTied as an int
+	 * @param teamCaptain as Player
+	 * @param teamMembers as ArrayList<Player>
+	 */
 	public Player(long id, String name, Integer roundsPlayed,
-			Integer roundsWon, Integer roundsLost, Integer roundsTied) {
+			Integer roundsWon, Integer roundsLost, Integer roundsTied, Player teamCaptain, ArrayList<Player> teamMembers) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -21,21 +37,28 @@ public class Player {
 		this.roundsWon = roundsWon;
 		this.roundsLost = roundsLost;
 		this.roundsTied = roundsTied;
+		this.teamCaptain = teamCaptain;
+		this.teamMembers = teamMembers;
 	}
 
-		
+	/**
+	 * over ridden toString method	
+	 */
 	public String toString(){
 		
 		return "";
 	}
 		
 	/**
-	 * @return the id
+	 * get id 
+	 * @return id as a Long
 	 */
 	public long getId() {
 		return id;
 	}
+	
 	/**
+	 * set id 
 	 * @param id the id to set
 	 */
 	public void setId(long id) {
@@ -43,6 +66,7 @@ public class Player {
 	}
 
 	/**
+	 * get name
 	 * @return the name
 	 */
 	public String getName() {
@@ -50,6 +74,7 @@ public class Player {
 	}
 
 	/**
+	* set the name
 	* @param name the name to set
 	*/
 	public void setName(String name) {
@@ -57,6 +82,7 @@ public class Player {
 	}
 
 	/**
+	 * get rounds played
 	 * @return the roundsPlayed
 	 */
 	public Integer getRoundsPlayed() {
@@ -64,6 +90,7 @@ public class Player {
 	}
 
 	/**
+	 * set rounds played
 	 * @param roundsPlayed the roundsPlayed to set
 	 */
 	public void setRoundsPlayed(Integer roundsPlayed) {
@@ -71,6 +98,7 @@ public class Player {
 	}
 
 	/**
+	 * get rounds won 
 	 * @return the roundsWon
 	 */
 	public Integer getRoundsWon() {
@@ -78,6 +106,7 @@ public class Player {
 	}
 
 	/**
+	 * set rounds won
 	 * @param roundsWon the roundsWon to set
 	 */
 	public void setRoundsWon(Integer roundsWon) {
@@ -85,6 +114,7 @@ public class Player {
 	}
 
 	/**
+	 * get rounds lost
 	 * @return the roundsLost
 	 */
 	public Integer getRoundsLost() {
@@ -92,6 +122,7 @@ public class Player {
 	}
 
 	/**
+	 * set rounds lost
 	 * @param roundsLost the roundsLost to set
 	 */
 	public void setRoundsLost(Integer roundsLost) {
@@ -99,6 +130,7 @@ public class Player {
 	}
 
 	/**
+	 * get rounds tied
 	 * @return the roundsTied
 	 */
 	public Integer getRoundsTied() {
@@ -106,10 +138,42 @@ public class Player {
 	}
 
 	/**
+	 * set rounds tied
 	 * @param roundsTied the roundsTied to set
 	 */
 	public void setRoundsTied(Integer roundsTied) {
 		this.roundsTied = roundsTied;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public Player getTeamCaptain(){
+		return teamCaptain;
+	}
+	
+	/**
+	 * 
+	 * @param teamCaptain
+	 */
+	public void setTeamCaptain(Player teamCaptain){
+		this.teamCaptain = teamCaptain;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public ArrayList<Player> getTeamMembers(){
+		return teamMembers;
+	}
+	
+	/**
+	 * 
+	 * @param teamMembers
+	 */
+	public void setTeamMembers(ArrayList<Player> teamMembers){
+		this.teamMembers = teamMembers;
+	}
 }

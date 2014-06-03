@@ -10,26 +10,46 @@ import java.util.regex.Matcher;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gestures;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
-import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gesture;
 
 /**
+ * The Helper class generates random instances of Data class objects which can then be used in testing
  * @author A00913377 Tyler Wardle
  *
  */
 public class Helper {
    
 	/**
-	 * @param args
+	 * @param players is a list of players to be populated as an ArrayList of type Player
 	 */
 	private ArrayList<Player> players;
 	private static int RANDOM_NAME_LENGTH = 3;
 	
+	/**
+	 * default constructor
+	 */
 	public Helper(){
 		players = new ArrayList<Player>();
 	}
+	
 	/**
-	 *  
-	 * @param amount
+	 * get players
+	 * @return players as an ArrayList<Player>
+	 */
+	public ArrayList<Player> getPlayers(){
+		return players;
+	}
+	
+	/**
+	 * set players
+	 * @param players as an ArrayList<Player>
+	 */
+	public void setPlayers(ArrayList<Player> players){
+		this.players = players;
+	}
+	
+	/**
+	 * Populates the players ArrayList with Amount number of randomly generated Players or SimPlayers
+	 * @param amount as an int
 	 */
 	public void generatePlayers(int amount){
 		Random random = new Random();
@@ -41,7 +61,8 @@ public class Helper {
 								random.nextInt(),
 								random.nextInt(),
 								random.nextInt(),
-								random.nextInt()));
+								random.nextInt(), 
+								null, null));
 			}else{
 				players.add(new SimPlayer(i, 
 								generateName(),
@@ -49,14 +70,17 @@ public class Helper {
 								random.nextInt(),
 								random.nextInt(),
 								random.nextInt(),
-								Gestures.getRandomGesture())); 
-								//new Gesture(random.nextLong(),
-								//"" +random.nextInt(),
-								//"" +random.nextInt())));
+								null, null,
+								Gestures.getRandomGesture())); 								
 			}
 		}		
 		
 	}
+	
+	/**
+	 * Generates a random player name of length RANDOM_NAME_LENGTH  
+	 * @return name as a String
+	 */
 	public String generateName(){
 		Random random = new Random();
 		String alphabet = "abcdefghijklmnopqrstuvbxyz";
@@ -65,13 +89,16 @@ public class Helper {
 		
 		for (int i = 0; i < RANDOM_NAME_LENGTH; i++){			
 			letterIndex = random.nextInt(alphabet.length());
-			name = name.concat(alphabet.substring(letterIndex,letterIndex + 1));		
-						
-		}
-				
+			name = name.concat(alphabet.substring(letterIndex,letterIndex + 1));								
+		}				
 		return name;
 	}
 
+	/**
+	 * Finds a player name in the list of players by way of an exact match using .equals(name) 
+	 * @param name as a String
+	 * @return foundPlayers as an Array List of Players
+	 */
 	public ArrayList<Player> findPlayerByName(String name){
 		ArrayList<Player> foundPlayers = new ArrayList<Player>();
 		
@@ -82,6 +109,12 @@ public class Helper {
 		}
 		return foundPlayers;				
 	}
+	
+	/**
+	 * Finds a player name in the list of players by using a regex matching
+	 * @param name as a String
+	 * @return foundPlayers as an Array list of Players
+	 */
 	public ArrayList<Player> findPlayerByNameRegex(String name){
 		ArrayList<Player> foundPlayers = new ArrayList<Player>();
 		

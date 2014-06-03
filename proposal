@@ -1,15 +1,15 @@
-Rock Paper Scissors Lizard Spock simulator or RPSLSSim
-updated May 26, 2014
+Rock Paper Scissors Lizard Spock simulator or RPSLS
+updated June 2, 2014
 
 This application will simulate a single elimination tournament of RPSLS with a 
 random but even number of initial players greater than 2. The option of any number of user 
 controlled players with simulated players making up the remaining players in a tournament will 
-be available. Simulated players will throw random gestures and have a random bias for a certian 
+be available. Simulated players will throw random gestures and have a random bias for a certain 
 gesture while live players will be prompted for gestures.
 
 rules here: http://en.wikipedia.org/wiki/Rock-paper-scissors-lizard-Spock
 
-Classes
+Data Classes
 
 	Player
 		-name		
@@ -20,24 +20,15 @@ Classes
 
 	SimPlayer extends Player
 		-gestureBias
-	
 
-	ValidGestures
-		-gestures
-		
-
-	Gesture
+	enum class Gestures
 		-name
-		-displayImage
-		-beatsGestures
-		
-
-	RPSLSSim
-
+		-gestureNumber
+	
 
 Usage cases of these classes might be:
 	-playing a game of RPSLS and displaying players and gestures of each round to the console
-	-After a tournament/s displaying a ranking of plyers from most to least wins or losses 
+	-After a tournament/s displaying a ranking of players from most to least wins or losses 
 	-Displaying the gesture biases of simulated players
 	-determining which gesture/player wins in a round 
 	-etc.

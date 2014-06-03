@@ -1,0 +1,23 @@
+May 28, 2014
+	added a Gestures ENUM class to replace the gesture data class
+	
+	adjusted Helper and TestDriver to make use of the Gestures Enum
+	
+	added a static method to get a random gesture from Gestures
+
+June 2, 2014
+	Updated proposal to more accurately reflect the data classes in use.
+	
+	Added comments to data classes 
+	
+	Added a relationship between players. now players can have either team members of 
+	which they are the captain or they can have a team captain whom they are under.
+	
+	Added a testTeams class in the utill package to generate random teams and throw and 
+	catch random errors when players who dont get along are matched.
+	
+	Removed old Gesture data class in favor of new Gestures Enum class
+	
+	Removed ValidGesture class as this is not technicaly a required datal class now 
+	that we have the Gestures Enum class. 
+	

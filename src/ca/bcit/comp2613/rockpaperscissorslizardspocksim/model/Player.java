@@ -13,7 +13,6 @@ public class Player {
 	private Integer roundsWon;
 	private Integer roundsLost;
 	private Integer roundsTied;	
-	private Player teamCaptain;
 	private ArrayList<Player> teamMembers;
 		
 	/**
@@ -24,21 +23,18 @@ public class Player {
 	 * @param roundsPlayer as an int
 	 * @param roundsWon as an int
 	 * @param roundsLost as an int
-	 * @param roundsTied as an int
-	 * @param teamCaptain as Player
-	 * @param teamMembers as ArrayList<Player>
+	 * @param roundsTied as an int 
 	 */
 	public Player(long id, String name, Integer roundsPlayed,
-			Integer roundsWon, Integer roundsLost, Integer roundsTied, Player teamCaptain, ArrayList<Player> teamMembers) {
+			Integer roundsWon, Integer roundsLost, Integer roundsTied) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.roundsPlayed = roundsPlayed;
 		this.roundsWon = roundsWon;
 		this.roundsLost = roundsLost;
-		this.roundsTied = roundsTied;
-		this.teamCaptain = teamCaptain;
-		this.teamMembers = teamMembers;
+		this.roundsTied = roundsTied;		
+		this.teamMembers = null;
 	}
 
 	/**
@@ -148,23 +144,7 @@ public class Player {
 	/**
 	 * 
 	 * @return
-	 */
-	public Player getTeamCaptain(){
-		return teamCaptain;
-	}
-	
-	/**
-	 * 
-	 * @param teamCaptain
-	 */
-	public void setTeamCaptain(Player teamCaptain){
-		this.teamCaptain = teamCaptain;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
+	 */	
 	public ArrayList<Player> getTeamMembers(){
 		return teamMembers;
 	}

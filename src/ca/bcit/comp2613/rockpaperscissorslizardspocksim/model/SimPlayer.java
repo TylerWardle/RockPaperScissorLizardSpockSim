@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class SimPlayer extends Player{
 	
 	private Gestures gestureBias;
+	private Player teamCaptain;
 	
 	/**
 	 * default constructor
@@ -23,9 +24,10 @@ public class SimPlayer extends Player{
 	 * 
 	 */
 	public SimPlayer(long id, String name, Integer roundsPlayed, Integer roundsWon,
-			Integer roundsLost, Integer roundsTied, Player teamCaptain, ArrayList<Player> teamMembers, Gestures gestureBias) {
-		super(id, name, roundsPlayed, roundsWon, roundsLost, roundsTied, teamCaptain, teamMembers);
+			Integer roundsLost, Integer roundsTied, Gestures gestureBias) {
+		super(id, name, roundsPlayed, roundsWon, roundsLost, roundsTied);
 		this.gestureBias = gestureBias;
+		this.teamCaptain = null;
 	}
 	
 	/**
@@ -50,6 +52,15 @@ public class SimPlayer extends Player{
 	public void setGestureBias(Gestures gestureBias) {
 		this.gestureBias = gestureBias;
 	}
+	
+	public Player getTeamCaptain(){
+		return teamCaptain;
+	}
+	
+	public void setTeamCaptain(Player teamCaptain){
+		this.teamCaptain = teamCaptain;
+	}
+	
 	
 	
 

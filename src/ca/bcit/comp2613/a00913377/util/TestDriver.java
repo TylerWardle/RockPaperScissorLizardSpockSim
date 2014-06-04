@@ -8,7 +8,7 @@ import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
  *
  */
 public class TestDriver {
-
+	//AMOUNT must be << than 17576 as there are only that many unique three letter names.
 	private static int AMOUNT = 10000;
 	private static String NAME = "xyz";
 	private static String REGEX_NAME = "xy.";
@@ -28,6 +28,7 @@ public class TestDriver {
 	public static void testNameLookup(){
 		Helper helper = new Helper();
 		helper.generatePlayers(AMOUNT);
+		helper.buildTeams();
 		ArrayList<Player> players = helper.findPlayerByName(NAME);
 		ArrayList<Player> regexPlayers = helper.findPlayerByNameRegex(REGEX_NAME);
 		
@@ -35,6 +36,7 @@ public class TestDriver {
 			System.out.println("Found exact player Name " + player.getName());
 			if (player instanceof SimPlayer){
 				System.out.println("Gesture Bias " + ((SimPlayer)player).getGestureBias().getDescription());
+				System.out.println("Team Captain " + ((SimPlayer)player).getTeamCaptain().getName());
 			}
 		}
 		

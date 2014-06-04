@@ -61,8 +61,7 @@ public class Helper {
 								random.nextInt(),
 								random.nextInt(),
 								random.nextInt(),
-								random.nextInt(), 
-								null, null));
+								random.nextInt()));
 			}else{
 				players.add(new SimPlayer(i, 
 								generateName(),
@@ -70,27 +69,33 @@ public class Helper {
 								random.nextInt(),
 								random.nextInt(),
 								random.nextInt(),
-								null, null,
 								Gestures.getRandomGesture())); 								
-			}
+			}			
 		}		
 		
 	}
 	
 	/**
-	 * Generates a random player name of length RANDOM_NAME_LENGTH  
+	 * Generates a unique random player name of length RANDOM_NAME_LENGTH  
 	 * @return name as a String
 	 */
 	public String generateName(){
 		Random random = new Random();
 		String alphabet = "abcdefghijklmnopqrstuvbxyz";
 		String name = "";
+		boolean uniqueName = false;
 		int letterIndex;
 		
-		for (int i = 0; i < RANDOM_NAME_LENGTH; i++){			
-			letterIndex = random.nextInt(alphabet.length());
-			name = name.concat(alphabet.substring(letterIndex,letterIndex + 1));								
-		}				
+		while (!uniqueName){
+			name = "";
+			for (int i = 0; i < RANDOM_NAME_LENGTH; i++){			
+				letterIndex = random.nextInt(alphabet.length());
+				name = name.concat(alphabet.substring(letterIndex,letterIndex + 1));								
+			}
+			if(findPlayerByName(name).isEmpty()){
+				uniqueName = true;
+			}
+		}
 		return name;
 	}
 
@@ -126,6 +131,24 @@ public class Helper {
 			}
 		}
 		return foundPlayers;
+	}
+	
+	public void buildTeams(){
+		for(Player captain: players){
+			if (!(captain instanceof SimPlayer) && captain.getTeamMembers() == null){
+				for (Player teamMate : players){
+					if (teamMate instanceof SimPlayer){
+						if (((SimPlayer)teamMate).getTeamCaptain() == null){
+							ArrayList<Player> newTeam = captain.getTeamMembers();
+							newTeam.add(teamMate);
+							captain.setTeamMembers(newTeam);
+							((SimPlayer)teamMate).setTeamCaptain(captain);
+						}
+						
+					}
+				}
+			}
+		}
 	}
 	
 }

@@ -21,3 +21,17 @@ June 2, 2014
 	Removed ValidGesture class as this is not technicaly a required datal class now 
 	that we have the Gestures Enum class. 
 	
+June 4, 2014
+	Changed the added relationship between players mentioned on June 2. Now players only have 
+	team members and there are no captains.
+	
+	removed testTeams class and incorporated its function into a method in TestDriver
+	
+	added Runtime Exceptions for trying to put a player on a team with a disliked player(5% chance) 
+	and trying to put a player on a team with themselves(1% chance).
+	
+	added try catch block to the test driver for handling runtime errors as abouv
+	
+	general code formatting
+	
+	updated proposal to reflect addition of teamMembers field to the Player class 

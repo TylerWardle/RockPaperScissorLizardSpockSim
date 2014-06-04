@@ -17,6 +17,7 @@ Data Classes
 		-roundsWon
 		-roundsLost
 		-roundsTied
+		-teamMembers
 
 	SimPlayer extends Player
 		-gestureBias

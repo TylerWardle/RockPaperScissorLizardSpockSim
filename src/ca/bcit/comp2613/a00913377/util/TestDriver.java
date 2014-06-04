@@ -12,6 +12,7 @@ public class TestDriver {
 	private static int AMOUNT = 100;
 	private static String NAME = "xyz";
 	private static String REGEX_NAME = "x..";
+	private static int MIN_TEAM_SIZE = 3;
 	
 	/**
 	 * 
@@ -34,21 +35,18 @@ public class TestDriver {
 			System.out.println(e);
 		}catch (TeamWithSelfException e){
 			System.out.println(e);
-		}
+		}		
 		
-		
-		for (Player player: players){
-			System.out.println("Found exact player Name " + player.getName());
-			if (player instanceof SimPlayer){
-				System.out.println("Gesture Bias " + ((SimPlayer)player).getGestureBias().getDescription());
+		for (Player player : players){
+			if(player.getTeamMembers().size() > MIN_TEAM_SIZE){
+				System.out.println("Team Members");
+				for(Player teamMember : player.getTeamMembers()){
+					System.out.print(teamMember.getName() + " ");
+				}
+				System.out.println(" ");
 			}
-			System.out.print("Team Members ");
-			for (Player teamMember : player.getTeamMembers()){
-				System.out.print(teamMember.getName() + " ");					
-			}				
-			System.out.println("");
-			
 		}
+		
 	}
 	/**
 	 * 

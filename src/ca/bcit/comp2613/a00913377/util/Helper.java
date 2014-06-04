@@ -140,12 +140,12 @@ public class Helper {
 			ArrayList<Player> newTeam = new ArrayList<Player>();	
 			Player teamMate = players.get(random.nextInt(players.size()-1));		
 			// 5% of the time a team mate is chosen that dosen't get along with the player and a runtime exception is thrown 
-			//if(random.nextInt() % 5 == 0){
-			//	throw new DislikePlayerException();
-			//}
-			//if(teamMate == player){
-			//	throw new TeamWithSelfException();
-			//}
+			if(random.nextInt() % 5 == 0){
+				throw new DislikePlayerException();
+			}
+			if(teamMate == player){
+				throw new TeamWithSelfException();
+			}
 			
 			if (player.getTeamMembers().isEmpty()){				
 				if (teamMate.getTeamMembers().isEmpty()){

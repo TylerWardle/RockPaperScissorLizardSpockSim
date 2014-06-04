@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ca.bcit.comp2613.a00913377.util;
 
 /**

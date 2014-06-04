@@ -133,40 +133,44 @@ public class Helper {
 		return foundPlayers;
 	}
 	
-	public void buildTeams() throws DislikePlayerException, TeamWithSelfException{		
+	/**
+	 * Creates a team between playerOne's existing members and PlayerTwo's existing
+	 * members. If playerOne and playerTwo dislike each other an error is thrown.
+	 * if playerOne and playerTwo are the same player then an error is thrown.
+	 * 
+	 * @param playerOne as a Player
+	 * @param playerTwo as a Player
+	 * @throws DislikePlayerException
+	 * @throws TeamWithSelfException
+	 */
+	public void createTeam(Player playerOne, Player playerTwo) throws DislikePlayerException, TeamWithSelfException{
 		Random random = new Random();
-		for (Player player : players){
-			
-			ArrayList<Player> newTeam = new ArrayList<Player>();	
-			Player teamMate = players.get(random.nextInt(players.size()-1));		
-			// 5% of the time a team mate is chosen that dosen't get along with the player and a runtime exception is thrown 
-			if(random.nextInt() % 5 == 0){
-				throw new DislikePlayerException();
-			}
-			if(teamMate == player){
-				throw new TeamWithSelfException();
-			}
-			
-			if (player.getTeamMembers().isEmpty()){				
-				if (teamMate.getTeamMembers().isEmpty()){
-					newTeam.add(player);	
-					newTeam.add(teamMate);
-					player.setTeamMembers(newTeam);
-					teamMate.setTeamMembers(newTeam);
-				}else{
-					newTeam = teamMate.getTeamMembers();
-					newTeam.add(player);				
-					player.setTeamMembers(newTeam);
-					teamMate.setTeamMembers(newTeam);
-				}
+		if(random.nextInt() % 5 == 0){
+			throw new DislikePlayerException(playerOne, playerTwo);
+		}else if(playerTwo == playerOne){
+			throw new TeamWithSelfException(playerOne);
+		}else{
+			ArrayList<Player> newTeam = new ArrayList<Player>();
+			if (playerTwo.getTeamMembers().isEmpty() && playerOne.getTeamMembers().isEmpty()){
+				newTeam.add(playerOne);	
+				newTeam.add(playerTwo);
+				playerOne.setTeamMembers(newTeam);
+				playerTwo.setTeamMembers(newTeam);
+			}else if(playerTwo.getTeamMembers().isEmpty() && !playerOne.getTeamMembers().isEmpty()){
+				newTeam = playerOne.getTeamMembers();
+				newTeam.add(playerTwo);				
+				playerOne.setTeamMembers(newTeam);
+				playerTwo.setTeamMembers(newTeam);
+			}else if(playerOne.getTeamMembers().isEmpty() && !playerTwo.getTeamMembers().isEmpty()){
+				newTeam = playerTwo.getTeamMembers();
+				newTeam.add(playerOne);				
+				playerOne.setTeamMembers(newTeam);
+				playerTwo.setTeamMembers(newTeam);
+			}else{
+				// both players already on a team so do nothing 
 			}
 		}
 		
-					
-				
-			
-		
 	}
-	
 }
 

@@ -142,16 +142,16 @@ public class Player {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * get team members
+	 * @return teamMembers as an ArrayList of Players
 	 */	
 	public ArrayList<Player> getTeamMembers(){
 		return teamMembers;
 	}
 	
 	/**
-	 * 
-	 * @param teamMembers
+	 * set team members
+	 * @param teamMembers as an ArrayList of Players
 	 */
 	public void setTeamMembers(ArrayList<Player> teamMembers){
 		this.teamMembers = teamMembers;

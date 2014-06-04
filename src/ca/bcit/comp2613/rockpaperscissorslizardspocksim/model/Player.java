@@ -34,7 +34,7 @@ public class Player {
 		this.roundsWon = roundsWon;
 		this.roundsLost = roundsLost;
 		this.roundsTied = roundsTied;		
-		this.teamMembers = null;
+		teamMembers = new ArrayList<Player>();
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class Player {
 	 */
 	public String toString(){
 		
-		return "";
+		return name;
 	}
 		
 	/**

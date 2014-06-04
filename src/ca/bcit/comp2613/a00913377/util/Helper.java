@@ -133,22 +133,39 @@ public class Helper {
 		return foundPlayers;
 	}
 	
-	public void buildTeams(){
-		for(Player captain: players){
-			if (!(captain instanceof SimPlayer) && captain.getTeamMembers() == null){
-				for (Player teamMate : players){
-					if (teamMate instanceof SimPlayer){
-						if (((SimPlayer)teamMate).getTeamCaptain() == null){
-							ArrayList<Player> newTeam = captain.getTeamMembers();
-							newTeam.add(teamMate);
-							captain.setTeamMembers(newTeam);
-							((SimPlayer)teamMate).setTeamCaptain(captain);
-						}
-						
-					}
+	public void buildTeams() throws DislikePlayerException, TeamWithSelfException{		
+		Random random = new Random();
+		for (Player player : players){
+			
+			ArrayList<Player> newTeam = new ArrayList<Player>();	
+			Player teamMate = players.get(random.nextInt(players.size()-1));		
+			// 5% of the time a team mate is chosen that dosen't get along with the player and a runtime exception is thrown 
+			//if(random.nextInt() % 5 == 0){
+			//	throw new DislikePlayerException();
+			//}
+			//if(teamMate == player){
+			//	throw new TeamWithSelfException();
+			//}
+			
+			if (player.getTeamMembers().isEmpty()){				
+				if (teamMate.getTeamMembers().isEmpty()){
+					newTeam.add(player);	
+					newTeam.add(teamMate);
+					player.setTeamMembers(newTeam);
+					teamMate.setTeamMembers(newTeam);
+				}else{
+					newTeam = teamMate.getTeamMembers();
+					newTeam.add(player);				
+					player.setTeamMembers(newTeam);
+					teamMate.setTeamMembers(newTeam);
 				}
 			}
 		}
+		
+					
+				
+			
+		
 	}
 	
 }

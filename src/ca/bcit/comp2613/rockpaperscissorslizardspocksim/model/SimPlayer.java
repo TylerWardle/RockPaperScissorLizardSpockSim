@@ -1,15 +1,12 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
 
-import java.util.ArrayList;
-
 /**
  * @author A00913377 Tyler Wardle
  * generates objects which represent simulated RPSLS players
  */
 public class SimPlayer extends Player{
 	
-	private Gestures gestureBias;
-	private Player teamCaptain;
+	private Gestures gestureBias;	
 	
 	/**
 	 * default constructor
@@ -26,15 +23,14 @@ public class SimPlayer extends Player{
 	public SimPlayer(long id, String name, Integer roundsPlayed, Integer roundsWon,
 			Integer roundsLost, Integer roundsTied, Gestures gestureBias) {
 		super(id, name, roundsPlayed, roundsWon, roundsLost, roundsTied);
-		this.gestureBias = gestureBias;
-		this.teamCaptain = null;
+		this.gestureBias = gestureBias;		
 	}
 	
 	/**
 	 * overide toString method
 	 */
 	public String toString(){
-		return "";
+		return super.getName();
 	}
 
 	/**
@@ -51,16 +47,7 @@ public class SimPlayer extends Player{
 	 */
 	public void setGestureBias(Gestures gestureBias) {
 		this.gestureBias = gestureBias;
-	}
-	
-	public Player getTeamCaptain(){
-		return teamCaptain;
-	}
-	
-	public void setTeamCaptain(Player teamCaptain){
-		this.teamCaptain = teamCaptain;
-	}
-	
+	}	
 	
 	
 

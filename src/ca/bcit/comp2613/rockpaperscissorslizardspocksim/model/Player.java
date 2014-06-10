@@ -5,7 +5,7 @@ import java.util.ArrayList;
  * @author A00913377 Tyler Wardle
  * generates objects which represent RPSLS players 
  */
-public class Player {
+public class Player implements Comparable<Player>{
 	
 	private long id;
 	private String name;	
@@ -40,10 +40,24 @@ public class Player {
 	/**
 	 * over ridden toString method	
 	 */
+	@Override
 	public String toString(){
 		
 		return name;
 	}
+	
+	@Override
+	public int compareTo(Player player){
+		int retval = this.getName().compareTo(player.getName());
+		if (retval == 0){
+			if (this.getTeamMembers().size() < player.getTeamMembers().size()){
+				retval = 1;
+			}else if (this.getTeamMembers().size() > player.getTeamMembers().size()){
+				retval = -1;
+			}			 
+		}		
+		return retval;
+	}	
 		
 	/**
 	 * get id 

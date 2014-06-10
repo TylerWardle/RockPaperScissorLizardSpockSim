@@ -1,4 +1,5 @@
 package ca.bcit.comp2613.a00913377.util;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,8 +23,21 @@ public class TestDriver {
 	 * @param args
 	 */
 	public static void main(String[] args) {		
-		testNameLookup();
-		testGenerateTeams();
+		//testNameLookup();
+		//testGenerateTeams();
+		testComparePlayers();
+	}
+	
+	/**
+	 * 
+	 */
+	public static void testComparePlayers(){
+		ArrayList<Player> players = buildPlayersAndTeams();
+		Collections.sort(players);
+		System.out.println("Sorted list of players");
+		for (Player player: players){
+			System.out.println("Name: " + player.getName() + " number of team mates: " + player.getTeamMembers().size());
+		}
 	}
 	
 	/**
@@ -31,14 +45,22 @@ public class TestDriver {
 	 * is already on a team then the player without a team joins. If both players have a 
 	 * team no action is taken. If neither player has a team they form one. 
 	 */
-	public static void testGenerateTeams(){
+	public static void testGenerateTeams(){			
+		//Generate players, Build teams, and Print out the teams with a number of members >= MIN_TEAM_SIZE
+		printTeams(buildPlayersAndTeams());	
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static ArrayList<Player> buildPlayersAndTeams(){
 		Random random = new Random();
 		Helper helper = new Helper();
 		helper.generatePlayers(PLAYERS_TO_GENERATE);
 		ArrayList<Player> players = helper.getPlayers();
-		ArrayList<Player> playersOnTeams = new ArrayList<Player>();
 		
-		System.out.println("Generate teams test");
+		System.out.println("Building Teams");
 		
 		//Build the teams from random players, if an error is thrown those players may
 		//not be added to any team.
@@ -51,8 +73,17 @@ public class TestDriver {
 			}catch (TeamWithSelfException e){
 				System.out.println(e);
 			}
-		}				
-		//Print out the teams with a number of members >= MIN_TEAM_SIZE
+		}
+		return players;		
+	}
+	
+	/**
+	 * 
+	 * @param players
+	 */
+	public static void printTeams(ArrayList<Player> players){
+		ArrayList<Player> playersOnTeams = new ArrayList<Player>();
+		
 		for (Player player : players){
 			if(player.getTeamMembers().size() >= MIN_TEAM_SIZE && !playersOnTeams.contains(player)){
 				System.out.println("Team Members of " + player.getName() + "'s team");

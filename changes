@@ -46,4 +46,7 @@ June 9, 2014
 	testGenerateTeams() now calls these two methods. This enables the newly added testComparePlayers() method to use
 	the buildPlayersAndTeams() method.
 	
+June 16, 2014
+	Added a logger of level INFO to the TestDriver class and changed all System.out to use log4j instead.
+	added a testDriver.properties file to specify the logger used in TestDriver.
 	

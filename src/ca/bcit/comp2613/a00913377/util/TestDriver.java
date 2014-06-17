@@ -2,6 +2,8 @@ package ca.bcit.comp2613.a00913377.util;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Random;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
@@ -16,16 +18,18 @@ public class TestDriver {
 	private static String NAME = "xyz";
 	private static String REGEX_NAME = "x..";
 	private static int MIN_TEAM_SIZE = 0;
-	
+	private static Logger log = Logger.getLogger(TestDriver.class);
 	
 	/**
 	 * Main method
 	 * @param args
 	 */
-	public static void main(String[] args) {		
-		//testNameLookup();
+	public static void main(String[] args) {
+		PropertyConfigurator.configure(TestDriver.class.getResourceAsStream("testDriver.properties"));
+		
+		testNameLookup();
 		//testGenerateTeams();
-		testComparePlayers();
+		//testComparePlayers();
 	}
 	
 	/**
@@ -34,9 +38,9 @@ public class TestDriver {
 	public static void testComparePlayers(){
 		ArrayList<Player> players = buildPlayersAndTeams();
 		Collections.sort(players);
-		System.out.println("Sorted list of players");
+		log.info("Sorted list of players");
 		for (Player player: players){
-			System.out.println("Name: " + player.getName() + " number of team mates: " + player.getTeamMembers().size());
+			log.info("Name: " + player.getName() + " number of team mates: " + player.getTeamMembers().size());
 		}
 	}
 	
@@ -51,7 +55,7 @@ public class TestDriver {
 	}
 	
 	/**
-	 * 
+	 * Build and return an ArrayList of Players
 	 * @return
 	 */
 	public static ArrayList<Player> buildPlayersAndTeams(){
@@ -60,7 +64,7 @@ public class TestDriver {
 		helper.generatePlayers(PLAYERS_TO_GENERATE);
 		ArrayList<Player> players = helper.getPlayers();
 		
-		System.out.println("Building Teams");
+		log.info("Building Teams");
 		
 		//Build the teams from random players, if an error is thrown those players may
 		//not be added to any team.
@@ -69,16 +73,16 @@ public class TestDriver {
 			try{
 				helper.createTeam(playerOne, playerTwo);
 			}catch (DislikePlayerException e){
-				System.out.println(e);
+				log.info(e);
 			}catch (TeamWithSelfException e){
-				System.out.println(e);
+				log.info(e);
 			}
 		}
 		return players;		
 	}
 	
 	/**
-	 * 
+	 * Print out teams
 	 * @param players
 	 */
 	public static void printTeams(ArrayList<Player> players){
@@ -86,13 +90,12 @@ public class TestDriver {
 		
 		for (Player player : players){
 			if(player.getTeamMembers().size() >= MIN_TEAM_SIZE && !playersOnTeams.contains(player)){
-				System.out.println("Team Members of " + player.getName() + "'s team");
+				log.info("Team Members of " + player.getName() + "'s team");
 				playersOnTeams.add(player);
 				for(Player teamMember : player.getTeamMembers()){
-					System.out.print(teamMember.getName() + " ");
+					log.info(teamMember.getName() + " ");
 					playersOnTeams.add(teamMember);
 				}
-				System.out.println(" ");
 			}
 		}		
 	}
@@ -103,34 +106,31 @@ public class TestDriver {
 	 */
 	public static void testNameLookup(){
 		Helper helper = new Helper();
-		helper.generatePlayers(PLAYERS_TO_GENERATE);
-		
+		helper.generatePlayers(PLAYERS_TO_GENERATE);		
 		
 		ArrayList<Player> players = helper.findPlayerByName(NAME);
 		ArrayList<Player> regexPlayers = helper.findPlayerByNameRegex(REGEX_NAME);
-		System.out.println("Name lookup test");
+		log.info("Name lookup test");
 		
 		for (Player player: players){
 			
 			if (player instanceof SimPlayer){
-				System.out.println("Found exact sim player Name " + player.getName());
-				System.out.println("Gesture Bias " + ((SimPlayer)player).getGestureBias().getDescription());
-				System.out.println(" ");
+				log.info("Found exact sim player Name " + player.getName());
+				log.info("Gesture Bias " + ((SimPlayer)player).getGestureBias().getDescription());
+				//log.info(" ");
 			}else{
-				System.out.println("Found exact player Name " + player.getName());
-				System.out.println(" ");
+				log.info("Found exact player Name " + player.getName());
+				//log.info(" ");
 			}
 				
 		}
 		
 		for (Player player: regexPlayers){			
 			if (player instanceof SimPlayer){
-				System.out.println("Found regex sim player Name " + player.getName());
-				System.out.println("Gesture Bias " + ((SimPlayer)player).getGestureBias().getDescription());
-				System.out.println(" ");
+				log.info("Found regex sim player Name " + player.getName());
+				log.info("Gesture Bias " + ((SimPlayer)player).getGestureBias().getDescription());
 			}else{
-				System.out.println("Found regex player Name " + player.getName());
-				System.out.println(" ");
+				log.info("Found regex player Name " + player.getName());
 			}
 		}	
 	}

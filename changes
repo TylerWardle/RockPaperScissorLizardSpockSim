@@ -50,3 +50,9 @@ June 16, 2014
 	Added a logger of level INFO to the TestDriver class and changed all System.out to use log4j instead.
 	added a testDriver.properties file to specify the logger used in TestDriver.
 	
+June 17, 2014
+	Changed testDriver.proporties to have a second appender of level ERROR which is a RollingFileAppender
+	set the output file name to testDriverErrorLog.txt.
+	Changed the logger level of the caught error logs in the buildPlayersAndTeams method to ERROR.
+	Now all errors generated in the buildPlayersAndTeams method will be logged.
+	

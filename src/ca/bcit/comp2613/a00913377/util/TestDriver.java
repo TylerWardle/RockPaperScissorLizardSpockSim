@@ -25,15 +25,15 @@ public class TestDriver {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		PropertyConfigurator.configure(TestDriver.class.getResourceAsStream("testDriver.properties"));
-		
-		testNameLookup();
-		//testGenerateTeams();
+		PropertyConfigurator.configure(TestDriver.class.getResourceAsStream("testDriver.properties"));		
+		//testNameLookup();
+		testGenerateTeams();
 		//testComparePlayers();
 	}
 	
 	/**
-	 * 
+	 * Builds an ArrayList of players and sorts them. This method is testing the compareTo method of Player.
+	 * then print out a sorted list of players
 	 */
 	public static void testComparePlayers(){
 		ArrayList<Player> players = buildPlayersAndTeams();
@@ -56,7 +56,7 @@ public class TestDriver {
 	
 	/**
 	 * Build and return an ArrayList of Players
-	 * @return
+	 * @return players as an ArrayList
 	 */
 	public static ArrayList<Player> buildPlayersAndTeams(){
 		Random random = new Random();
@@ -67,15 +67,15 @@ public class TestDriver {
 		log.info("Building Teams");
 		
 		//Build the teams from random players, if an error is thrown those players may
-		//not be added to any team.
+		//not be added to any team. All errors are recorded in testDriverErrorLog.txt.
 		for (Player  playerOne : players){
 			Player playerTwo = players.get(random.nextInt(players.size()-1));
 			try{
 				helper.createTeam(playerOne, playerTwo);
 			}catch (DislikePlayerException e){
-				log.info(e);
+				log.error(e);
 			}catch (TeamWithSelfException e){
-				log.info(e);
+				log.error(e);
 			}
 		}
 		return players;		
@@ -83,7 +83,7 @@ public class TestDriver {
 	
 	/**
 	 * Print out teams
-	 * @param players
+	 * @param players as an ArrayList
 	 */
 	public static void printTeams(ArrayList<Player> players){
 		ArrayList<Player> playersOnTeams = new ArrayList<Player>();
@@ -117,10 +117,8 @@ public class TestDriver {
 			if (player instanceof SimPlayer){
 				log.info("Found exact sim player Name " + player.getName());
 				log.info("Gesture Bias " + ((SimPlayer)player).getGestureBias().getDescription());
-				//log.info(" ");
 			}else{
 				log.info("Found exact player Name " + player.getName());
-				//log.info(" ");
 			}
 				
 		}

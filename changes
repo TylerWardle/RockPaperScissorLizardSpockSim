@@ -56,3 +56,4 @@ June 17, 2014
 	Changed the logger level of the caught error logs in the buildPlayersAndTeams method to ERROR.
 	Now all errors generated in the buildPlayersAndTeams method will be logged.
 	
+	

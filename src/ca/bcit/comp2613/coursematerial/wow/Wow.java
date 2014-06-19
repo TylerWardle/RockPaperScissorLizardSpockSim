@@ -17,29 +17,30 @@ import org.apache.log4j.Logger;
  *         folder, 2) right click and then 3) copy).  If that fails, copy the files one by one ;)
  *         
  *         
- *         So here's the problem. How powerful are my
- *         characters? 
+ *         WoW - World Of Warcraft questions
+ *         
  * 
  *         1) Modify the Race enum to include HUMAN x
  *         
- *         2) Implement rollCharacters (generates 100 Random Characters) PROPERLY
+ *         2) Implement rollCharacters (generates 100 Random Characters) PROPERLY x
  *         
- *         3) Sort the characters by level, strength, armour 
+ *         3) Sort the characters by level, strength, armour x
  *         
  *         4) Print out the characters in a
- *         readable format (modify printCharacters)
+ *         readable format (modify printCharacters) x
  *         
- *         5) Implement checkAndRemoveAnyHordeSpies (hint: ORCs are Horde)
+ *         5) Implement checkAndRemoveAnyHordeSpies (hint: ORCs are Horde) x
  *         
  *         6) Print out the
- *         characters again after we remove those pesky Horde spies
+ *         characters again after we remove those pesky Horde spies x
  *         
- *         7) Modify checkForPandaren : If we have any Pandaren races in our characters list, throw a DontHaveTheExpansionException
+ *         7) Modify checkForPandaren : If we have any Pandaren races in our characters list, throw a DontHaveTheExpansionException x
  *         
+ *         8) Bonus: read the comments of the method: myCharactersAfterMyArchNemesisHacksIntoMyAccount and implement getLevelOfMissingCharacter x
  *         
  *         When you are finished, please commit this package as
  *         ca.bcit.comp2613.<your student id>.wow in your GitHub project folder 
- *         note that package name should *always* be in lowercase 
+ *         note that package name should *always* be lowercase 
  *         
  *        
  */
@@ -57,6 +58,8 @@ public class Wow {
 		}catch (DontHaveTheExpansionException e){
 			System.out.println(e);
 		}
+		//bonus question output
+		System.out.println("Missing Level is " + getLevelOfMissingCharacter());
 		
 	}
 
@@ -115,7 +118,7 @@ public class Wow {
 						retval = Integer.valueOf(character1.getArmour()).compareTo(character2.getArmour());
 					}
 				}
-				return retval;
+				return -1*retval;
 			}
 		};
 	}
@@ -148,6 +151,63 @@ public class Wow {
 				throw new DontHaveTheExpansionException();
 			}
 		}
+	}
+
+	
+	/**
+	 * Bonus Question (2% of overall grade)
+	 * So here's the scenario:
+	 * I have 85 characters in my WoW account.  Ironically enough, each character's level is unique
+	 * i.e. I have a Level1, Level2, Level3 ... Level85 characters (although in a shuffled order)
+	 * Then one day, my arch-nemesis hacks into my account and DELETEs only one of my characters.
+	 * Write a program that finds out which character level he DELETEd.
+	 * Maximum marks will be given for efficiency.  It is possible to solve this problem by looping through
+	 * the arraylist just **ONCE**
+	 * Also note, that although this isn't necessarily a Java question, this is a permutation of an interview question
+	 * used by a few Fortune 100 companies.  
+	 * 
+	 * Its a true *computer science* question
+	 * Also note that if you can solve this question, most likely you have a greater computer science
+	 * mind than 90% of the instructors at BCIT and you're bored silly of this course because its too easy for you ;)
+	 * 
+	 * And just for the record, it took me *OVER* half an hour to solve this.  Its tricky ;)
+	 */
+	public static ArrayList<Character> myCharactersAfterMyArchNemesisHacksIntoMyAccount() {
+		ArrayList<Character> retval = new ArrayList<Character>();
+		for (int i = 1; i <= 85; i++) {
+			Character character = new Character(Race.ORC, i, i, i);
+			retval.add(character);
+		}
+		Collections.shuffle(retval);
+		// then my archNemesis randomly DELETE's one of my characters
+		Random random = new Random();
+		int randIndex = random.nextInt(86);
+		retval.remove(randIndex);		
+		return retval;
+	}
+	
+	// TODO
+	// Your turn!
+	// implement getLevelOfMissingCharacter
+	public static int getLevelOfMissingCharacter() {
+		int retval = 0;
+		ArrayList<Character> characters = myCharactersAfterMyArchNemesisHacksIntoMyAccount();
+		
+		//added for checking correctness
+		Comparator<Character> characterComparator = createCharacterComparator();
+		Collections.sort(characters, characterComparator);
+		printCharacters(characters);
+		
+		//Step through the list of characters and get a sum of the level of each character.
+		//since only one character is missing and we know there was originally 85 and each level is unique 
+		//then the sum of 1+2+3+....+85 minus the sum calculated from the list of characters
+		//which is missing one will give a difference equal to the missing level.
+		for (Character character: characters){
+			retval += character.getLevel();
+		}		
+		//Note that (n*(n+1))/2 is equal to 1 + 2 + 3 + ... + n
+		retval = (85*86)/2 - retval; 			
+		return retval;
 	}
 
 }

@@ -27,7 +27,7 @@ public class TestDriver {
 	public static void main(String[] args) {
 		PropertyConfigurator.configure(TestDriver.class.getResourceAsStream("log4j.properties"));		
 		//testNameLookup();
-		testGenerateTeams();
+		//testGenerateTeams();
 		//testComparePlayers();
 	}
 	

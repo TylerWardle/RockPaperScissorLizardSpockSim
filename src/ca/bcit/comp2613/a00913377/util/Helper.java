@@ -172,5 +172,12 @@ public class Helper {
 		}
 		
 	}
+	
+	public ArrayList<Player> populatePlayers(int size){
+		
+		generatePlayers(size);
+		
+		return players;
+	}
 }
 

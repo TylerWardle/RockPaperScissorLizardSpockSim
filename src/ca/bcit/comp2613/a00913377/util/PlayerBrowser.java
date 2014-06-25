@@ -34,6 +34,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -46,6 +47,7 @@ import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 import java.util.ArrayList;
 
 public class PlayerBrowser extends JFrame {
+
 	private JTextField playerName;
 	private JTextField roundsPlayed;
 	private JTextField roundsWon;
@@ -54,7 +56,7 @@ public class PlayerBrowser extends JFrame {
 	private JTable table;
 	private ArrayList<Player> players;
 	public String[] columnNames = new String[] { "Name", "Rounds Won", "Rounds Lost", "Rounds Tied" };
-	public PlayerBrowserModel playerBrowserModel;
+	public PlayerBrowserModel playerBrowserModel ;
 
 	/**
 	 * Launch the application.
@@ -63,8 +65,8 @@ public class PlayerBrowser extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PlayerBrowser frame = new PlayerBrowser();
-					frame.setVisible(true);
+					PlayerBrowser window = new PlayerBrowser();
+					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -76,8 +78,10 @@ public class PlayerBrowser extends JFrame {
 	 * Create the frame.
 	 */
 	public PlayerBrowser() {
-		players = TestDriver.buildPlayersAndTeams();
+		Helper helper = new Helper();
+		players = helper.populatePlayers(100);
 		initialize();
+		initTable();
 	}
 	private void initTable() {
 
@@ -109,6 +113,7 @@ public class PlayerBrowser extends JFrame {
 	}
 	
 	public void refreshTable(){
+		playerBrowserModel = new PlayerBrowserModel();
 		Object[][] data = null;
 
 		data = new Object[players.size()][4];
@@ -125,10 +130,25 @@ public class PlayerBrowser extends JFrame {
 	}
 	
 	public void initialize(){
+		playerBrowserModel = new PlayerBrowserModel();
+		//setModel(playerBrowserModel);
 		setTitle("Player Browser");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 500);
 		getContentPane().setLayout(null);
+		
+		
+		table = new JTable(playerBrowserModel);
+		table.setBackground(Color.WHITE);
+		table.setBounds(12, 279, 608, -246);
+		getContentPane().add(table);
+		
+		// table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+		table.setFillsViewportHeight(true);
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(12, 13, 608, 247);
+		getContentPane().add(scrollPane);		
+		
 		
 		playerName = new JTextField();
 		playerName.setBounds(41, 399, 161, 20);
@@ -213,11 +233,8 @@ public class PlayerBrowser extends JFrame {
 		
 		JSeparator separator = new JSeparator();
 		separator.setBounds(12, 356, 610, 7);
-		getContentPane().add(separator);
+		getContentPane().add(separator);	
 		
-		table = new JTable();
-		table.setBounds(12, 279, 608, -246);
-		getContentPane().add(table);
 	}
 	
 	public void doCreate(){

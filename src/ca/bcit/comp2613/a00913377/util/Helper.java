@@ -3,6 +3,8 @@
  */
 package ca.bcit.comp2613.a00913377.util;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -23,6 +25,7 @@ public class Helper {
 	 */
 	private ArrayList<Player> players;
 	private static int RANDOM_NAME_LENGTH = 3;
+	private static int MAX_GAMES = 10;
 	
 	/**
 	 * default constructor
@@ -58,17 +61,17 @@ public class Helper {
 			if (random.nextBoolean()){
 				players.add(new Player(i, 
 								generateName(),
-								random.nextInt(),
-								random.nextInt(),
-								random.nextInt(),
-								random.nextInt()));
+								random.nextInt(MAX_GAMES),
+								random.nextInt(MAX_GAMES),
+								random.nextInt(MAX_GAMES),
+								random.nextInt(MAX_GAMES)));
 			}else{
 				players.add(new SimPlayer(i, 
 								generateName(),
-								random.nextInt(),
-								random.nextInt(),
-								random.nextInt(),
-								random.nextInt(),
+								random.nextInt(MAX_GAMES),
+								random.nextInt(MAX_GAMES),
+								random.nextInt(MAX_GAMES),
+								random.nextInt(MAX_GAMES),
 								Gestures.getRandomGesture())); 								
 			}			
 		}		
@@ -178,6 +181,29 @@ public class Helper {
 		generatePlayers(size);
 		
 		return players;
+	}
+	
+	public static void deletePlayer(ArrayList<Player> players, Player player) {
+		Iterator<Player> iterator = players.iterator();
+		while (iterator.hasNext()) {
+			Player currentPlayer = iterator.next();
+			if (currentPlayer.getId() == player.getId()) {
+				iterator.remove();
+				break;
+			}
+		}
+	}
+	
+	public static void updatePlayer(ArrayList<Player> players, Player player){
+		Iterator<Player> iterator = players.iterator();
+		while (iterator.hasNext()) {
+			Player currentPlayer = iterator.next();
+			if (currentPlayer.getId() == player.getId()) {
+				iterator.remove();
+				players.add(player);
+				break;
+			}		
+		}
 	}
 }
 

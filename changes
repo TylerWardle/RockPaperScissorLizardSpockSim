@@ -56,4 +56,15 @@ June 17, 2014
 	Changed the logger level of the caught error logs in the buildPlayersAndTeams method to ERROR.
 	Now all errors generated in the buildPlayersAndTeams method will be logged.
 	
+June 24, 2014
+	Added static method deletPlayer to Helper class
+	Added static method updatePlayer to Helper Class
+	Added populatePlayers method to Helper class
+	
+	Created PlayerBrowser a Swing based GUI browser which allows you to brows players, create new players
+	update a player, and Delete players. A refresh button is also added so the table of players 
+	can be refreshed on demand.
+	
+	
+	  	
 	

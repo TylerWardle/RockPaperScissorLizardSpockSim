@@ -45,9 +45,11 @@ import java.awt.event.ActionEvent;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 
 import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 
 public class PlayerBrowser extends JFrame {
 
+	private JTextField id;
 	private JTextField playerName;
 	private JTextField roundsPlayed;
 	private JTextField roundsWon;
@@ -55,8 +57,9 @@ public class PlayerBrowser extends JFrame {
 	private JTextField roundsTied;
 	private JTable table;
 	private ArrayList<Player> players;
-	public String[] columnNames = new String[] { "Name", "Rounds Won", "Rounds Lost", "Rounds Tied" };
+	public String[] columnNames = new String[] { "ID", "Name", "Rounds Played", "Rounds Won", "Rounds Lost", "Rounds Tied" };
 	public PlayerBrowserModel playerBrowserModel ;
+	private JTextField ID;
 
 	/**
 	 * Launch the application.
@@ -81,7 +84,7 @@ public class PlayerBrowser extends JFrame {
 		Helper helper = new Helper();
 		players = helper.populatePlayers(100);
 		initialize();
-		initTable();
+		initTable();		
 	}
 	private void initTable() {
 
@@ -101,28 +104,33 @@ public class PlayerBrowser extends JFrame {
 	}
 	public void populateFields(){
 		try {
-			playerName.setText(table.getModel()
+			id.setText(table.getModel()
 					.getValueAt(table.getSelectedRow(), 0).toString());
-			roundsWon.setText(table.getModel()
+			playerName.setText(table.getModel()
 					.getValueAt(table.getSelectedRow(), 1).toString());
-			roundsLost.setText(table.getModel()
+			roundsPlayed.setText(table.getModel()
 					.getValueAt(table.getSelectedRow(), 2).toString());
+			roundsWon.setText(table.getModel()
+					.getValueAt(table.getSelectedRow(), 3).toString());
+			roundsLost.setText(table.getModel()
+					.getValueAt(table.getSelectedRow(), 4).toString());
 			roundsTied.setText(table.getModel()
-					.getValueAt(table.getSelectedRow(), 3).toString());			
+					.getValueAt(table.getSelectedRow(), 5).toString());			
 		} catch (Exception e) {}
 	}
 	
-	public void refreshTable(){
-		playerBrowserModel = new PlayerBrowserModel();
+	public void refreshTable(){		
 		Object[][] data = null;
 
-		data = new Object[players.size()][4];
+		data = new Object[players.size()][6];
 		int i = 0;
 		for (Player player : players) {
-			data[i][0] = player.getName();
-			data[i][1] = player.getRoundsWon();
-			data[i][2] = player.getRoundsLost();
-			data[i][3] = player.getRoundsTied();
+			data[i][0] = player.getId();
+			data[i][1] = player.getName();
+			data[i][2] = player.getRoundsPlayed();
+			data[i][3] = player.getRoundsWon();
+			data[i][4] = player.getRoundsLost();
+			data[i][5] = player.getRoundsTied();
 			i++;
 		}
 		playerBrowserModel.setDataVector(data, columnNames);
@@ -130,47 +138,44 @@ public class PlayerBrowser extends JFrame {
 	}
 	
 	public void initialize(){
-		playerBrowserModel = new PlayerBrowserModel();
-		//setModel(playerBrowserModel);
+		
 		setTitle("Player Browser");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 500);
 		getContentPane().setLayout(null);
 		
-		
+		playerBrowserModel = new PlayerBrowserModel();		
 		table = new JTable(playerBrowserModel);
+		table.setFillsViewportHeight(true);
 		table.setBackground(Color.WHITE);
 		table.setBounds(12, 279, 608, -246);
 		getContentPane().add(table);
-		
-		// table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-		table.setFillsViewportHeight(true);
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(12, 13, 608, 247);
 		getContentPane().add(scrollPane);		
 		
 		
 		playerName = new JTextField();
-		playerName.setBounds(41, 399, 161, 20);
+		playerName.setBounds(134, 400, 161, 20);
 		getContentPane().add(playerName);
 		playerName.setColumns(10);
 		
 		JLabel lblPlayerName = new JLabel("Player Name");
-		lblPlayerName.setBounds(44, 376, 100, 16);
+		lblPlayerName.setBounds(134, 376, 100, 16);
 		getContentPane().add(lblPlayerName);
 		
 		roundsPlayed = new JTextField();
-		roundsPlayed.setBounds(243, 398, 56, 22);
+		roundsPlayed.setBounds(305, 398, 56, 22);
 		getContentPane().add(roundsPlayed);
 		roundsPlayed.setColumns(10);
 		
 		JLabel lblPlayed = new JLabel("Played");
-		lblPlayed.setBounds(243, 376, 56, 16);
+		lblPlayed.setBounds(305, 376, 56, 16);
 		getContentPane().add(lblPlayed);
 		
 		roundsWon = new JTextField();
 		roundsWon.setColumns(10);
-		roundsWon.setBounds(340, 397, 56, 22);
+		roundsWon.setBounds(371, 397, 56, 22);
 		getContentPane().add(roundsWon);
 		
 		roundsLost = new JTextField();
@@ -184,7 +189,7 @@ public class PlayerBrowser extends JFrame {
 		getContentPane().add(roundsTied);
 		
 		JLabel lblWon = new JLabel("Won");
-		lblWon.setBounds(340, 376, 56, 16);
+		lblWon.setBounds(371, 376, 56, 16);
 		getContentPane().add(lblWon);
 		
 		JLabel lblLost = new JLabel("Lost");
@@ -204,10 +209,10 @@ public class PlayerBrowser extends JFrame {
 		btnCreate.setBounds(45, 318, 99, 25);
 		getContentPane().add(btnCreate);
 		
-		JButton btnList = new JButton("List");
+		JButton btnList = new JButton("Refresh");
 		btnList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				doList();
+				refreshTable();
 			}
 		});
 		btnList.setBounds(191, 318, 99, 25);
@@ -235,18 +240,33 @@ public class PlayerBrowser extends JFrame {
 		separator.setBounds(12, 356, 610, 7);
 		getContentPane().add(separator);	
 		
+		id = new JTextField();
+		id.setEditable(false);
+		id.setColumns(10);
+		id.setBounds(45, 400, 56, 22);
+		getContentPane().add(id);
+		
+		JLabel IDLable = new JLabel("ID");
+		IDLable.setBounds(45, 377, 56, 16);
+		getContentPane().add(IDLable);
+		
 	}
 	
 	public void doCreate(){
+		if (playerName != null && roundsPlayed != null && roundsWon != null &&
+				roundsLost!= null && roundsTied != null){
+			players.add(new Player(players.size() + 1,playerName.getText(), Integer.valueOf(roundsPlayed.getText()), Integer.valueOf(roundsWon.getText()), Integer.valueOf(roundsLost.getText()), Integer.valueOf(roundsTied.getText())));
 		
-	}	
-	public void doList(){
-		
-	}
+		}
+	}		
 	public void doUpdate(){
+		Player updatePlayer = new Player(Integer.valueOf(id.getText()),playerName.getText(), Integer.valueOf(roundsPlayed.getText()), Integer.valueOf(roundsWon.getText()), Integer.valueOf(roundsLost.getText()), Integer.valueOf(roundsTied.getText()));
+		Helper.updatePlayer(players, updatePlayer);
 		
 	}
 	public void doDelete(){
+		Player deletePlayer = new Player(Integer.valueOf(id.getText()),playerName.getText(), Integer.valueOf(roundsPlayed.getText()), Integer.valueOf(roundsWon.getText()), Integer.valueOf(roundsLost.getText()), Integer.valueOf(roundsTied.getText()));
+		Helper.deletePlayer(players, deletePlayer);
 		
 	}
 }

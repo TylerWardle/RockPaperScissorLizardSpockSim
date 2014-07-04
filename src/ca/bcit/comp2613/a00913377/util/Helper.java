@@ -199,8 +199,10 @@ public class Helper {
 		while (iterator.hasNext()) {
 			Player currentPlayer = iterator.next();
 			if (currentPlayer.getId() == player.getId()) {
+				//currentPlayer = player;
+				int index = players.indexOf(currentPlayer);
 				iterator.remove();
-				players.add(player);
+				players.add(index,player);
 				break;
 			}		
 		}

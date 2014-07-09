@@ -1,18 +1,34 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
 import java.util.ArrayList;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 /**
  * @author A00913377 Tyler Wardle
  * generates objects which represent RPSLS players 
  */
+
+@Entity
 public class Player implements Comparable<Player>{
 	
+	@Id
 	private long id;
 	private String name;	
 	private Integer roundsPlayed;
 	private Integer roundsWon;
 	private Integer roundsLost;
 	private Integer roundsTied;	
+	@ManyToMany(cascade = CascadeType.ALL)
 	private ArrayList<Player> teamMembers;
 		
 	/**

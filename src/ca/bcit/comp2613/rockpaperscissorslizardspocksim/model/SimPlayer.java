@@ -1,9 +1,22 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 /**
  * @author A00913377 Tyler Wardle
  * generates objects which represent simulated RPSLS players
  */
+@Entity
 public class SimPlayer extends Player{
 	
 	private Gestures gestureBias;	

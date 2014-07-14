@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+
 /**
  * @author A00913377 Tyler Wardle
  * generates objects which represent RPSLS players 
@@ -30,9 +31,23 @@ public class Player implements Comparable<Player>{
 	private Integer roundsTied;	
 	@ManyToMany(cascade = CascadeType.ALL)
 	private ArrayList<Player> teamMembers;
+	
+	/**
+	 * Default constructor 
+	 */
+	public Player() {
+		super();
+		this.id = 0;
+		this.name = "";
+		this.roundsPlayed = 0;
+		this.roundsWon = 0;
+		this.roundsLost = 0;
+		this.roundsTied = 0;		
+		teamMembers = new ArrayList<Player>();
+	}
 		
 	/**
-	 * Default constructor
+	 * Overloaded constructor
 	 * 
 	 * @param id as a long
 	 * @param name as a String

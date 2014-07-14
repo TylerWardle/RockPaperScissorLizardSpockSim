@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 
 public interface PlayerRepository extends CrudRepository<Player, String>{
-	List<Player> findByLastName(String lastName);
+	List<Player> findByName(String name);
 }

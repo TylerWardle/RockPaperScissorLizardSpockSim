@@ -86,6 +86,16 @@ public class TournamentBuilder extends JFrame {
 		});
 	}
 	
+	/**
+	 * Create the frame.
+	 */
+	public TournamentBuilder() {
+		Helper helper = new Helper();
+		players = helper.populatePlayers(8);
+		initialize();
+		initTable();		
+	}
+	
 	private void initTable() {
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -102,6 +112,7 @@ public class TournamentBuilder extends JFrame {
 		refreshTable();
 
 	}
+	
 	public void populateFields(){
 		Iterator<Player> iterator = players.iterator();
 		try {
@@ -155,19 +166,7 @@ public class TournamentBuilder extends JFrame {
 		}
 		tournamentBuilderModel.setDataVector(data, columnNames);		
 		table.repaint();
-		
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public TournamentBuilder() {
-		Helper helper = new Helper();
-		players = helper.populatePlayers(8);
-		initialize();
-		initTable();
-		
-	}
+	}	
 	
 	public void initialize(){
 		
@@ -303,9 +302,7 @@ public class TournamentBuilder extends JFrame {
 		
 		JButton btnPlay = new JButton("Play");
 		btnPlay.setBounds(723, 290, 99, 23);
-		contentPane.add(btnPlay);
-		
-		
+		contentPane.add(btnPlay);		
 	}
 	
 	public void doCreate(){

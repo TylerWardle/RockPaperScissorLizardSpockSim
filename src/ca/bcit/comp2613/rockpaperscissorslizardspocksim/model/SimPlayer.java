@@ -19,8 +19,8 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 public class SimPlayer extends Player{
 	
-	//@Id 
-	//private long id;
+	@Id 
+	private long id;
 	private Gestures gestureBias;	
 	
 	/**

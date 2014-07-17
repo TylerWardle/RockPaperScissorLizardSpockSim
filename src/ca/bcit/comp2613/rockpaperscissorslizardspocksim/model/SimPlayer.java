@@ -16,10 +16,10 @@ import org.hibernate.annotations.FetchMode;
  * @author A00913377 Tyler Wardle
  * generates objects which represent simulated RPSLS players
  */
-@Entity
+//@Entity
 public class SimPlayer extends Player{
 	
-	@Id 
+	//@Id 
 	private long id;
 	private Gestures gestureBias;	
 	

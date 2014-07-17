@@ -8,8 +8,8 @@ http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd">
 <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 <property name="driverClassName" value="com.mysql.jdbc.Driver" />
 <property name="url"
-value="jdbc:mysql://sql3.freemysqlhosting.net/sql346238" />
-<property name="username" value="sql346238" />
-<property name="password" value="bT2*mH4*" />
+value="jdbc:mysql://sql3.freemysqlhosting.net/sql346908" />
+<property name="username" value="sql346908" />
+<property name="password" value="nI2!cQ2!" />
 </bean>
 </beans>

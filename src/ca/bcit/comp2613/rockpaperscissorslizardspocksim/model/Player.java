@@ -1,5 +1,5 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -30,7 +30,7 @@ public class Player implements Comparable<Player>{
 	private Integer roundsLost;
 	private Integer roundsTied;	
 	@ManyToMany(cascade = CascadeType.ALL)
-	private ArrayList<Player> teamMembers;
+	private List<Player> teamMembers;
 	
 	/**
 	 * Default constructor 
@@ -43,7 +43,7 @@ public class Player implements Comparable<Player>{
 		this.roundsWon = 0;
 		this.roundsLost = 0;
 		this.roundsTied = 0;		
-		teamMembers = new ArrayList<Player>();
+		//teamMembers = new List<Player>();
 	}
 		
 	/**
@@ -65,7 +65,7 @@ public class Player implements Comparable<Player>{
 		this.roundsWon = roundsWon;
 		this.roundsLost = roundsLost;
 		this.roundsTied = roundsTied;		
-		teamMembers = new ArrayList<Player>();
+		//teamMembers = new List<Player>();
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class Player implements Comparable<Player>{
 	 * get team members
 	 * @return teamMembers as an ArrayList of Players
 	 */	
-	public ArrayList<Player> getTeamMembers(){
+	public List<Player> getTeamMembers(){
 		return teamMembers;
 	}
 	
@@ -198,7 +198,7 @@ public class Player implements Comparable<Player>{
 	 * set team members
 	 * @param teamMembers as an ArrayList of Players
 	 */
-	public void setTeamMembers(ArrayList<Player> teamMembers){
+	public void setTeamMembers(List<Player> teamMembers){
 		this.teamMembers = teamMembers;
 	}
 }

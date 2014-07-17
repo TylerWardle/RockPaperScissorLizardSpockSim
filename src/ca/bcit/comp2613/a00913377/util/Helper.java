@@ -152,7 +152,7 @@ public class Helper {
 			throw new DislikePlayerException(playerOne, playerTwo);
 		}else if(playerTwo == playerOne){
 			throw new TeamWithSelfException(playerOne);
-		}else{
+		}else{			
 			ArrayList<Player> newTeam = new ArrayList<Player>();
 			if (playerTwo.getTeamMembers().isEmpty() && playerOne.getTeamMembers().isEmpty()){
 				newTeam.add(playerOne);	
@@ -160,12 +160,12 @@ public class Helper {
 				playerOne.setTeamMembers(newTeam);
 				playerTwo.setTeamMembers(newTeam);
 			}else if(playerTwo.getTeamMembers().isEmpty() && !playerOne.getTeamMembers().isEmpty()){
-				newTeam = playerOne.getTeamMembers();
+				newTeam = (ArrayList)playerOne.getTeamMembers();
 				newTeam.add(playerTwo);				
 				playerOne.setTeamMembers(newTeam);
 				playerTwo.setTeamMembers(newTeam);
 			}else if(playerOne.getTeamMembers().isEmpty() && !playerTwo.getTeamMembers().isEmpty()){
-				newTeam = playerTwo.getTeamMembers();
+				newTeam = (ArrayList)playerTwo.getTeamMembers();
 				newTeam.add(playerOne);				
 				playerOne.setTeamMembers(newTeam);
 				playerTwo.setTeamMembers(newTeam);

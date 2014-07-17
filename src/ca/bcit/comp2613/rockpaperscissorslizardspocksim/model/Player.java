@@ -42,8 +42,7 @@ public class Player implements Comparable<Player>{
 		this.roundsPlayed = 0;
 		this.roundsWon = 0;
 		this.roundsLost = 0;
-		this.roundsTied = 0;		
-		//teamMembers = new List<Player>();
+		this.roundsTied = 0;				
 	}
 		
 	/**
@@ -64,8 +63,7 @@ public class Player implements Comparable<Player>{
 		this.roundsPlayed = roundsPlayed;
 		this.roundsWon = roundsWon;
 		this.roundsLost = roundsLost;
-		this.roundsTied = roundsTied;		
-		//teamMembers = new List<Player>();
+		this.roundsTied = roundsTied;	
 	}
 
 	/**

@@ -166,6 +166,38 @@
 	according to their bias. This is just an update on the usecase.
 	</div>
 </div>
+<br>
+
+<div class= "post-header">
+	<div class="published">
+		<span class="caption">Changes:</span>
+		<span class="publishdate" itemprop="datePublished"> July 17, 2014</span>
+	</div>
+</div>	
+
+<div class="post-body">
+	<div class="post-content" itemprop= " articleBody">
+	Finalized assignment 8 requirements including:
+	<br><br>
+	addition of mysql, spring, and hibernate libraries to pom. 
+	<br><br>
+	Changes to Player model class to annotate for usage with spring. Also changed type of teamMembers 
+	from ArrayList<Player> to List<Player>
+	<br><br>
+	Created new .util package under rockpaperscissorslizardspocksim and added the PlayerUtil class 
+	to help instantiate 100 random players to populate our database. 
+	<br><br>
+	Added new .repository package under rockpaperscissorslizardspocksim for a PlayerRepository and CustomQuery
+	classes. PlayerRepository inheriting from CrudRepository and CustomQueryHelper being used to retreive
+	a player from the repository.
+	<br><br>
+	Added a new TestDriver class under rockpaperscissorslizardspocksim to run a Spring application.
+	The TestDriver deletes all previous content of the repository, generates 100 random instances 
+	of player, saves these to the repository, saves a specificly generated Player to id position 20 
+	and then serches for the player at id 20 and prints their name.        
+	<br>
+	</div>
+</div>
 	
 </body>
 </html>	

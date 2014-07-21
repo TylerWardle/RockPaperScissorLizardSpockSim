@@ -33,6 +33,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
@@ -48,6 +49,7 @@ import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gestures;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import java.util.Iterator;
+import javax.swing.JTextPane;
 
 
 
@@ -61,13 +63,16 @@ public class TournamentBuilder extends JFrame {
 	private JTextField roundsWon;
 	private JTextField roundsLost;
 	private JTextField roundsTied;	
+	private ArrayList<Player> roundOneWinners;
+	private ArrayList<Player> roundTwoWinners;
 	private TournamentBuilderModel tournamentBuilderModel;
 	private JLabel lblPlayerRoster;
-	private ArrayList<ArrayList<ArrayList<JTextField>>> bracket;
+	//private ArrayList<ArrayList<ArrayList<JTextField>>> bracket;
 	private ArrayList<Player> players;
 	//public String[] columnNames = new String[] { "ID", "Name", "Rounds Played", "Rounds Won", "Rounds Lost", "Rounds Tied" };
 	public String[] columnNames = new String[] {"ID","Name", "NPC?"};
 	private JTextField gestureBias;
+	private JTextField txtGesture;
 
 
 	/**
@@ -91,6 +96,8 @@ public class TournamentBuilder extends JFrame {
 	 */
 	public TournamentBuilder() {
 		Helper helper = new Helper();
+		ArrayList<Player> roundOneWinners = new ArrayList<Player>(4);
+		ArrayList<Player> roundTwoWinners = new ArrayList<Player>(2);
 		players = helper.populatePlayers(8);
 		initialize();
 		initTable();		
@@ -168,11 +175,23 @@ public class TournamentBuilder extends JFrame {
 		table.repaint();
 	}	
 	
+	public void play(){
+		for (Player player: players){
+			
+		}
+		Gestures gesture = (Gestures) JOptionPane.showInputDialog(null,"Choose your weapon", "RPSLS Sim",
+				JOptionPane.QUESTION_MESSAGE, null,Gestures.values(), Gestures.ROCK);
+		if(gesture instanceof Gestures){
+			txtGesture.setText(gesture.getDescription());
+		}
+		
+	}
+	
 	public void initialize(){
 		
 		setTitle("Tournament Builder");
 		
-		bracket = new ArrayList<ArrayList<ArrayList<JTextField>>>();
+		//bracket = new ArrayList<ArrayList<ArrayList<JTextField>>>();
 				
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 850, 390);
@@ -302,7 +321,19 @@ public class TournamentBuilder extends JFrame {
 		
 		JButton btnPlay = new JButton("Play");
 		btnPlay.setBounds(723, 290, 99, 23);
-		contentPane.add(btnPlay);		
+		contentPane.add(btnPlay);
+		
+		txtGesture = new JTextField();
+		txtGesture.setText("Gesture");
+		txtGesture.setBounds(170, 28, 86, 20);
+		contentPane.add(txtGesture);
+		txtGesture.setColumns(10);
+		btnPlay.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				play();
+			}
+		});
+		
 	}
 	
 	public void doCreate(){

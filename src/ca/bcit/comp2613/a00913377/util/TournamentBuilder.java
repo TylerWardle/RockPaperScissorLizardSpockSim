@@ -51,6 +51,7 @@ import java.util.Random;
 import javax.swing.table.DefaultTableModel;
 import java.util.Iterator;
 import javax.swing.JTextPane;
+import javax.swing.table.TableModel;
 
 
 
@@ -67,10 +68,8 @@ public class TournamentBuilder extends JFrame {
 	private ArrayList<Player> roundOneWinners;
 	private ArrayList<Player> roundTwoWinners;
 	private TournamentBuilderModel tournamentBuilderModel;
-	private JLabel lblPlayerRoster;
-	//private ArrayList<ArrayList<ArrayList<JTextField>>> bracket;
-	private ArrayList<Player> players;
-	//public String[] columnNames = new String[] { "ID", "Name", "Rounds Played", "Rounds Won", "Rounds Lost", "Rounds Tied" };
+	private JLabel lblPlayerRoster;	
+	private ArrayList<Player> players;	
 	public String[] columnNames = new String[] {"ID","Name", "NPC?"};
 	private JTextField gestureBias;
 	private JTextField txtGesture;
@@ -97,8 +96,8 @@ public class TournamentBuilder extends JFrame {
 	 */
 	public TournamentBuilder() {
 		Helper helper = new Helper();
-		ArrayList<Player> roundOneWinners = new ArrayList<Player>(4);
-		ArrayList<Player> roundTwoWinners = new ArrayList<Player>(2);
+		roundOneWinners = new ArrayList<Player>(4);
+		roundTwoWinners = new ArrayList<Player>(2);
 		players = helper.populatePlayers(8);
 		initialize();
 		initTable();		
@@ -141,23 +140,13 @@ public class TournamentBuilder extends JFrame {
 						gestureBias.setText("N/A");
 					}
 				}
-			}
-			
-			//roundsPlayed.setText(table.getModel()
-			//		.getValueAt(table.getSelectedRow(), 2).toString());
-			//roundsWon.setText(table.getModel()
-			//		.getValueAt(table.getSelectedRow(), 3).toString());
-			//roundsLost.setText(table.getModel()
-			//		.getValueAt(table.getSelectedRow(), 4).toString());
-			//roundsTied.setText(table.getModel()
-			//		.getValueAt(table.getSelectedRow(), 5).toString());			
+			}					
 		} catch (Exception e) {}
 	}
 	
 	public void refreshTable(){		
 		Object[][] data = null;
-
-		//data = new Object[players.size()][6];
+		
 		data = new Object[players.size()][3];
 		int i = 0;
 		for (Player player : players) {
@@ -165,11 +154,7 @@ public class TournamentBuilder extends JFrame {
 			data[i][1] = player.getName();
 			if (player instanceof SimPlayer){
 				data[i][2] = true;
-			}
-			//data[i][2] = player.getRoundsPlayed();
-			//data[i][3] = player.getRoundsWon();
-			//data[i][4] = player.getRoundsLost();
-			//data[i][5] = player.getRoundsTied();
+			}			
 			i++;
 		}
 		tournamentBuilderModel.setDataVector(data, columnNames);		
@@ -177,40 +162,61 @@ public class TournamentBuilder extends JFrame {
 	}	
 	
 	public void play(){
-		Iterator<Player> iterator = players.iterator();
+		Player tournamentWinner;
+		
+		roundOneWinners = executeRound(players);;
+		roundTwoWinners = executeRound(roundOneWinners);
+		tournamentWinner = executeRound(roundTwoWinners).get(0);
+		JOptionPane.showMessageDialog(null,tournamentWinner.getName() + " wins the tournament!");		
+		
+	}
+	
+	public ArrayList<Player> executeRound(ArrayList<Player> players){
+		Iterator<Player> round = players.iterator();
+		
+		Player winner;
+		ArrayList<Player> winners = new ArrayList<Player>();
+		
 		Player playerOne;
 		Gestures playerOneThrow;
 		Player playerTwo;
 		Gestures playerTwoThrow;
 		
-		while (iterator.hasNext()){
-			playerOne = iterator.next(); 
-			playerTwo = iterator.next();			
+		while (round.hasNext()){			
+			playerOne = round.next(); 
+			playerTwo = round.next();	
 						
 			do{
 				playerOneThrow = getPlayersThrow(playerOne);
 				playerTwoThrow = getPlayersThrow(playerTwo);
-				if (playerOneThrow == playerTwoThrow){
-					playerOne.setRoundsTied(playerOne.getRoundsTied()+1);
-					playerTwo.setRoundsTied(playerTwo.getRoundsTied()+1);
-				}
-			}while(playerOneThrow == playerTwoThrow);
-			
-			if (playerOneThrow.getDefeatingGestures().contains(playerTwoThrow)){
-				txtGesture.setText(playerTwo.getName() + " Wins!");
-				playerOne.setRoundsLost(playerOne.getRoundsLost()+1);
-				playerTwo.setRoundsWon(playerTwo.getRoundsWon()+1);
-			}else{
-				txtGesture.setText(playerOne.getName() + " Wins!");
-				playerOne.setRoundsWon(playerOne.getRoundsWon()+1);
-				playerTwo.setRoundsLost(playerTwo.getRoundsLost()+1);
-			}
+				winner = updateScore(playerOne, playerTwo, playerOneThrow, playerTwoThrow);
+				winners.add(winner);
+			}while(playerOneThrow == playerTwoThrow);				
+		}	
+		winners.trimToSize();
+		return winners;
+	}
+	
+	public Player updateScore(Player playerOne, Player playerTwo, Gestures playerOneThrow, Gestures playerTwoThrow){
+		
+		playerOne.setRoundsPlayed(playerOne.getRoundsPlayed()+1);
+		playerTwo.setRoundsPlayed(playerTwo.getRoundsPlayed()+1);
+		
+		if (playerOneThrow == playerTwoThrow){
+			playerOne.setRoundsTied(playerOne.getRoundsTied()+1);
+			playerTwo.setRoundsTied(playerTwo.getRoundsTied()+1);
+			return null;
+		}else if(playerOneThrow.getDefeatingGestures().contains(playerTwoThrow)){
+			txtGesture.setText(playerTwo.getName() + " Wins!");
+			playerOne.setRoundsLost(playerOne.getRoundsLost()+1);
+			playerTwo.setRoundsWon(playerTwo.getRoundsWon()+1);
+			return playerTwo;
+		}else{
+			txtGesture.setText(playerOne.getName() + " Wins!");
+			playerOne.setRoundsWon(playerOne.getRoundsWon()+1);
+			playerTwo.setRoundsLost(playerTwo.getRoundsLost()+1);
+			return playerOne;
 		}
-		//Gestures gesture = (Gestures) JOptionPane.showInputDialog(null,"Choose your weapon", "RPSLS Sim",
-		//		JOptionPane.QUESTION_MESSAGE, null,Gestures.values(), Gestures.ROCK);
-		//if(gesture instanceof Gestures){
-		//	txtGesture.setText(gesture.getDescription());
-		//}
 		
 	}
 	
@@ -244,22 +250,21 @@ public class TournamentBuilder extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
 		
-		tournamentBuilderModel = new TournamentBuilderModel();		
+		tournamentBuilderModel = new TournamentBuilderModel();
+		contentPane.setLayout(null);
 		table = new JTable(tournamentBuilderModel);
+		table.setBounds(1, 1, 148, 248);
 		table.setFillsViewportHeight(true);
-		//table.setBackground(Color.WHITE);
-		table.setBounds(0, -106, 150, 250);
 		getContentPane().add(table);
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(10, 30, 150, 250);
-		getContentPane().add(scrollPane);	
+		getContentPane().add(scrollPane);			
 		
 		id = new JTextField();
+		id.setBounds(10, 318, 56, 22);
 		id.setEditable(false);
 		id.setColumns(10);
-		id.setBounds(10, 318, 56, 22);
 		getContentPane().add(id);
 		
 		JLabel IDLable = new JLabel("ID");
@@ -276,8 +281,8 @@ public class TournamentBuilder extends JFrame {
 		getContentPane().add(lblPlayerName);
 		
 		roundsPlayed = new JTextField();
-		roundsPlayed.setEditable(false);
 		roundsPlayed.setBounds(247, 318, 56, 22);
+		roundsPlayed.setEditable(false);
 		getContentPane().add(roundsPlayed);
 		roundsPlayed.setColumns(10);
 		
@@ -286,21 +291,21 @@ public class TournamentBuilder extends JFrame {
 		getContentPane().add(lblPlayed);
 		
 		roundsWon = new JTextField();
+		roundsWon.setBounds(313, 318, 56, 22);
 		roundsWon.setEditable(false);
 		roundsWon.setColumns(10);
-		roundsWon.setBounds(313, 318, 56, 22);
 		getContentPane().add(roundsWon);
 		
 		roundsLost = new JTextField();
+		roundsLost.setBounds(376, 318, 56, 22);
 		roundsLost.setEditable(false);
 		roundsLost.setColumns(10);
-		roundsLost.setBounds(376, 318, 56, 22);
 		getContentPane().add(roundsLost);
 		
 		roundsTied = new JTextField();
+		roundsTied.setBounds(442, 318, 56, 22);
 		roundsTied.setEditable(false);
 		roundsTied.setColumns(10);
-		roundsTied.setBounds(442, 318, 56, 22);
 		getContentPane().add(roundsTied);
 		
 		JLabel lblWon = new JLabel("Won");
@@ -320,44 +325,44 @@ public class TournamentBuilder extends JFrame {
 		contentPane.add(lblPlayerRoster);
 		
 		JButton btnCreate = new JButton("Create");
+		btnCreate.setBounds(723, 38, 99, 25);
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				doCreate();
 			}
 		});
-		btnCreate.setBounds(723, 38, 99, 25);
 		getContentPane().add(btnCreate);
 		
 		JButton btnList = new JButton("Refresh");
+		btnList.setBounds(723, 101, 99, 25);
 		btnList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				refreshTable();
 			}
 		});
-		btnList.setBounds(723, 101, 99, 25);
 		getContentPane().add(btnList);
 		
 		JButton btnUpdate = new JButton("Update");
+		btnUpdate.setBounds(723, 164, 99, 25);
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				doUpdate();
 			}
 		});
-		btnUpdate.setBounds(723, 164, 99, 25);
 		getContentPane().add(btnUpdate);
 		
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.setBounds(723, 227, 99, 25);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				doDelete();
 			}
 		});
-		btnDelete.setBounds(723, 227, 99, 25);
 		getContentPane().add(btnDelete);
 		
 		gestureBias = new JTextField();
-		gestureBias.setEditable(false);
 		gestureBias.setBounds(508, 319, 56, 20);
+		gestureBias.setEditable(false);
 		contentPane.add(gestureBias);
 		gestureBias.setColumns(10);
 		
@@ -368,17 +373,23 @@ public class TournamentBuilder extends JFrame {
 		JButton btnPlay = new JButton("Play");
 		btnPlay.setBounds(723, 290, 99, 23);
 		contentPane.add(btnPlay);
-		
-		txtGesture = new JTextField();
-		txtGesture.setText("Gesture");
-		txtGesture.setBounds(170, 28, 86, 20);
-		contentPane.add(txtGesture);
-		txtGesture.setColumns(10);
 		btnPlay.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				play();
 			}
 		});
+		
+		txtGesture = new JTextField();
+		txtGesture.setBounds(584, 319, 86, 20);
+		txtGesture.setText("Gesture");
+		contentPane.add(txtGesture);
+		txtGesture.setColumns(10);
+		
+		JLabel lblRoundOneWinners = new JLabel("Round One Winners");
+		lblRoundOneWinners.setBounds(170, 11, 148, 14);
+		contentPane.add(lblRoundOneWinners);
+		
+		
 		
 	}
 	

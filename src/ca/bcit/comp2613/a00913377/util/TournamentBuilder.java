@@ -185,15 +185,32 @@ public class TournamentBuilder extends JFrame {
 		
 		while (iterator.hasNext()){
 			playerOne = iterator.next(); 
-			iterator.remove();
-			playerTwo = iterator.next();
-			iterator.remove();			
+			playerTwo = iterator.next();			
+						
+			do{
+				playerOneThrow = getPlayersThrow(playerOne);
+				playerTwoThrow = getPlayersThrow(playerTwo);
+				if (playerOneThrow == playerTwoThrow){
+					playerOne.setRoundsTied(playerOne.getRoundsTied()+1);
+					playerTwo.setRoundsTied(playerTwo.getRoundsTied()+1);
+				}
+			}while(playerOneThrow == playerTwoThrow);
+			
+			if (playerOneThrow.getDefeatingGestures().contains(playerTwoThrow)){
+				txtGesture.setText(playerTwo.getName() + " Wins!");
+				playerOne.setRoundsLost(playerOne.getRoundsLost()+1);
+				playerTwo.setRoundsWon(playerTwo.getRoundsWon()+1);
+			}else{
+				txtGesture.setText(playerOne.getName() + " Wins!");
+				playerOne.setRoundsWon(playerOne.getRoundsWon()+1);
+				playerTwo.setRoundsLost(playerTwo.getRoundsLost()+1);
+			}
 		}
-		Gestures gesture = (Gestures) JOptionPane.showInputDialog(null,"Choose your weapon", "RPSLS Sim",
-				JOptionPane.QUESTION_MESSAGE, null,Gestures.values(), Gestures.ROCK);
-		if(gesture instanceof Gestures){
-			txtGesture.setText(gesture.getDescription());
-		}
+		//Gestures gesture = (Gestures) JOptionPane.showInputDialog(null,"Choose your weapon", "RPSLS Sim",
+		//		JOptionPane.QUESTION_MESSAGE, null,Gestures.values(), Gestures.ROCK);
+		//if(gesture instanceof Gestures){
+		//	txtGesture.setText(gesture.getDescription());
+		//}
 		
 	}
 	
@@ -206,11 +223,13 @@ public class TournamentBuilder extends JFrame {
 				return Gestures.getRandomGesture();
 			}
 		}else{
-			Gestures gesture = (Gestures) JOptionPane.showInputDialog(null,"Choose your weapon", "RPSLS Sim",
+			Gestures gesture = (Gestures) JOptionPane.showInputDialog(null,
+					player.getName() + " choose your weapon", "RPSLS Sim",
 					JOptionPane.QUESTION_MESSAGE, null,Gestures.values(), Gestures.ROCK);
 			if(gesture instanceof Gestures){
-				txtGesture.setText(gesture.getDescription());
+				return gesture;
 			}
+			return Gestures.ROCK;
 		}
 	}
 	

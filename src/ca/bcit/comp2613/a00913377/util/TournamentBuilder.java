@@ -47,6 +47,7 @@ import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gestures;
 
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.table.DefaultTableModel;
 import java.util.Iterator;
 import javax.swing.JTextPane;
@@ -176,8 +177,17 @@ public class TournamentBuilder extends JFrame {
 	}	
 	
 	public void play(){
-		for (Player player: players){
-			
+		Iterator<Player> iterator = players.iterator();
+		Player playerOne;
+		Gestures playerOneThrow;
+		Player playerTwo;
+		Gestures playerTwoThrow;
+		
+		while (iterator.hasNext()){
+			playerOne = iterator.next(); 
+			iterator.remove();
+			playerTwo = iterator.next();
+			iterator.remove();			
 		}
 		Gestures gesture = (Gestures) JOptionPane.showInputDialog(null,"Choose your weapon", "RPSLS Sim",
 				JOptionPane.QUESTION_MESSAGE, null,Gestures.values(), Gestures.ROCK);
@@ -185,6 +195,23 @@ public class TournamentBuilder extends JFrame {
 			txtGesture.setText(gesture.getDescription());
 		}
 		
+	}
+	
+	public Gestures getPlayersThrow(Player player){
+		Random random = new Random();
+		if(player instanceof SimPlayer){
+			if (random.nextBoolean()){
+				return ((SimPlayer) player).getGestureBias();
+			}else{
+				return Gestures.getRandomGesture();
+			}
+		}else{
+			Gestures gesture = (Gestures) JOptionPane.showInputDialog(null,"Choose your weapon", "RPSLS Sim",
+					JOptionPane.QUESTION_MESSAGE, null,Gestures.values(), Gestures.ROCK);
+			if(gesture instanceof Gestures){
+				txtGesture.setText(gesture.getDescription());
+			}
+		}
 	}
 	
 	public void initialize(){

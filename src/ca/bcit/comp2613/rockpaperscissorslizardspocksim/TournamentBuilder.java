@@ -158,14 +158,9 @@ public class TournamentBuilder extends JFrame {
 	}
 	
 	public void refreshTable(){	
-		bracketModel.setDataVector(getCurrentData(players), columnNames);	
-		
-		if (bracket.get(1).size() > 0){
-			roundOneModel.setDataVector(getCurrentData(bracket.get(1)), columnNames);
-		}
-		if (bracket.get(2).size() > 0){
-			roundTwoModel.setDataVector(getCurrentData(bracket.get(2)), columnNames);
-		}
+		bracketModel.setDataVector(getCurrentData(players), columnNames);
+		roundOneModel.setDataVector(getCurrentData(bracket.get(1)), columnNames);
+		roundTwoModel.setDataVector(getCurrentData(bracket.get(2)), columnNames);		
 		table.repaint();
 		roundOne.repaint();
 		roundTwo.repaint();
@@ -189,17 +184,29 @@ public class TournamentBuilder extends JFrame {
 	
 	public void play(){		
 		int round = 1;
+		bracket.clear();
+		initializeEmptyBracket();
 		bracket.set(0, players);
+		refreshTable();
+		
 		
 		for(ArrayList<Player> players: bracket){
 			if (players.size() > 1){
-				bracket.set(round, executeRound(players));
-				refreshTable();
-				round++;
+				ArrayList<Player> winners = executeRound(players);
+				if (winners != null){
+					bracket.set(round, winners);
+					refreshTable();
+					round++;
+				}else{
+					bracket.clear();
+					break;					
+				}
 			}
 		}
-		txtWinner.setText(bracket.get(2).get(0).getName() + " Wins!");
-		JOptionPane.showMessageDialog(null,bracket.get(bracket.size()-1).get(0).getName()+ " wins the tournament!");		
+		if(bracket.size() != 0){
+			txtWinner.setText(bracket.get(3).get(0).getName() + " Wins!");
+			JOptionPane.showMessageDialog(null,bracket.get(bracket.size()-1).get(0).getName()+ " wins the tournament!");
+		}
 	}
 	
 	public ArrayList<Player> executeRound(ArrayList<Player> players){
@@ -223,6 +230,9 @@ public class TournamentBuilder extends JFrame {
 			do{
 				playerOneThrow = getPlayersThrow(playerOne);
 				playerTwoThrow = getPlayersThrow(playerTwo);
+				if (playerOneThrow == null || playerTwoThrow == null){
+					return null;
+				}
 				matchWinner = updateScore(playerOne, playerTwo, playerOneThrow, playerTwoThrow);				
 			}while(matchWinner == null);	
 			roundWinners.add(matchWinner);
@@ -270,7 +280,7 @@ public class TournamentBuilder extends JFrame {
 			if(gesture instanceof Gestures){
 				return gesture;
 			}else{
-				return Gestures.ROCK;
+				return null;
 			}
 		}
 	}
@@ -297,7 +307,7 @@ public class TournamentBuilder extends JFrame {
 		
 		roundOneModel = new RoundOneModel();
 		roundOne = new JTable(roundOneModel);
-		roundOne.setBounds(170, 30, 148, 248);
+		roundOne.setBounds(170, 30, 150, 250);
 		roundOne.setFillsViewportHeight(true);
 		getContentPane().add(roundOne);
 		JScrollPane scrollPaneOne = new JScrollPane(roundOne);
@@ -306,7 +316,7 @@ public class TournamentBuilder extends JFrame {
 		
 		roundTwoModel = new RoundTwoModel();
 		roundTwo = new JTable(roundTwoModel);
-		roundTwo.setBounds(330, 30, 148, 248);
+		roundTwo.setBounds(330, 30, 150, 250);
 		roundTwo.setFillsViewportHeight(true);
 		getContentPane().add(roundTwo);
 		JScrollPane scrollPaneTwo = new JScrollPane(roundTwo);

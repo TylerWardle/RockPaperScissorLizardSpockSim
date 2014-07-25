@@ -79,7 +79,7 @@ public class TournamentBuilder extends JFrame {
 	private ArrayList<Player> players;	
 	public String[] columnNames = new String[] {"ID","Name", "NPC?"};
 	private JTextField gestureBias;
-	private JTextField txtGesture;
+	private JTextField txtWinner;
 	//note that brackets size may only be doubles beginning with 2 ie. 2,4,8,16,32...
 	private int BRACKET_SIZE = 8; 
 	private ArrayList<ArrayList<Player>> bracket;
@@ -194,9 +194,11 @@ public class TournamentBuilder extends JFrame {
 		for(ArrayList<Player> players: bracket){
 			if (players.size() > 1){
 				bracket.set(round, executeRound(players));
+				refreshTable();
 				round++;
 			}
 		}
+		txtWinner.setText(bracket.get(2).get(0).getName() + " Wins!");
 		JOptionPane.showMessageDialog(null,bracket.get(bracket.size()-1).get(0).getName()+ " wins the tournament!");		
 	}
 	
@@ -224,7 +226,7 @@ public class TournamentBuilder extends JFrame {
 				matchWinner = updateScore(playerOne, playerTwo, playerOneThrow, playerTwoThrow);				
 			}while(matchWinner == null);	
 			roundWinners.add(matchWinner);
-			refreshTable();
+			
 		}	
 		roundWinners.trimToSize();
 		return roundWinners;
@@ -240,12 +242,12 @@ public class TournamentBuilder extends JFrame {
 			playerTwo.setRoundsTied(playerTwo.getRoundsTied()+1);
 			return null;
 		}else if(playerOneThrow.getDefeatingGestures().contains(playerTwoThrow)){
-			txtGesture.setText(playerTwo.getName() + " Wins!");
+			//txtGesture.setText(playerTwo.getName() + " Wins!");
 			playerOne.setRoundsLost(playerOne.getRoundsLost()+1);
 			playerTwo.setRoundsWon(playerTwo.getRoundsWon()+1);
 			return playerTwo;
 		}else{
-			txtGesture.setText(playerOne.getName() + " Wins!");
+			//txtGesture.setText(playerOne.getName() + " Wins!");
 			playerOne.setRoundsWon(playerOne.getRoundsWon()+1);
 			playerTwo.setRoundsLost(playerTwo.getRoundsLost()+1);
 			return playerOne;
@@ -429,10 +431,10 @@ public class TournamentBuilder extends JFrame {
 			}
 		});
 		
-		txtGesture = new JTextField();
-		txtGesture.setBounds(490, 30, 86, 20);
-		contentPane.add(txtGesture);
-		txtGesture.setColumns(10);
+		txtWinner = new JTextField();
+		txtWinner.setBounds(490, 30, 86, 20);
+		contentPane.add(txtWinner);
+		txtWinner.setColumns(10);
 		
 		JLabel lblRoundOneWinners = new JLabel("Round One Winners");
 		lblRoundOneWinners.setBounds(170, 11, 148, 14);

@@ -1,8 +1,8 @@
-package ca.bcit.comp2613.a00913377.util;
+package ca.bcit.comp2613.rockpaperscissorslizardspocksim;
 
 import javax.swing.table.DefaultTableModel;
 
-public class TournamentBuilderModel  extends DefaultTableModel {
+public class BracketModel  extends DefaultTableModel {
 	
 		 @Override
 		    public boolean isCellEditable(int row, int column) {

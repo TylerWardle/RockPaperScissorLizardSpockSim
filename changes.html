@@ -178,19 +178,19 @@
 <div class="post-body">
 	<div class="post-content" itemprop= " articleBody">
 	Finalized assignment 8 requirements including:
-	<br><br>
+	<br>
 	addition of mysql, spring, and hibernate libraries to pom. 
-	<br><br>
+	<br>
 	Changes to Player model class to annotate for usage with spring. Also changed type of teamMembers 
 	from ArrayList<Player> to List<Player>
-	<br><br>
+	<br>
 	Created new .util package under rockpaperscissorslizardspocksim and added the PlayerUtil class 
 	to help instantiate 100 random players to populate our database. 
-	<br><br>
+	<br>
 	Added new .repository package under rockpaperscissorslizardspocksim for a PlayerRepository and CustomQuery
 	classes. PlayerRepository inheriting from CrudRepository and CustomQueryHelper being used to retreive
 	a player from the repository.
-	<br><br>
+	<br>
 	Added a new TestDriver class under rockpaperscissorslizardspocksim to run a Spring application.
 	The TestDriver deletes all previous content of the repository, generates 100 random instances 
 	of player, saves these to the repository, saves a specificly generated Player to id position 20 
@@ -199,7 +199,7 @@
 	</div>
 </div>
 
-<br>
+<br><br>
 
 <div class= "post-header">
 	<div class="published">
@@ -213,23 +213,40 @@
 	Made adjustments to the Gesture Model class. Added a defeating gesture field and a method, 
 	getDefeaiting gestures which returns an array list of gestures which defeat the gesture on which the request was made
 	 
-	<br><br>
+	<br>
 	Added some work on the Play method of the tournamentBuilder GUI to prompt the user for their gesture
 	and return it with a dialog. 
-	<br><br>
+	<br>
 	Added round two and round three containers to hold and view the winners moving forward 
-	<br><br>
+	<br>
 	Changed the teamMembers variable of Player to be defeatedPlayers. This variable will be populated as the 
 	tournament progresses. 
-	<br><br>
+	<br>
 	Added a BracketFullException and DuplicatePlayerException to be used with the create and update methods 
 	of the tournamentBrowser CRUD.
-	<br><br>
+	<br>
 	    
 	<br>
 	</div>
 </div>
+
+<br><br>
+
+<div class= "post-header">
+	<div class="published">
+		<span class="caption">Changes:</span>
+		<span class="publishdate" itemprop="datePublished"> July 28, 2014</span>
+	</div>
+</div>
+
+<div class="post-body">
+	<div class="post-content" itemprop= " articleBody">
+	Refactored TournamentBuilder to rename it as RPSLSApplication
+	<br>
 	
+	
+	</div>
+</div>
 </body>
 </html>	
 	

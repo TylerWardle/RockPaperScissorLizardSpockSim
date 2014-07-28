@@ -2,7 +2,7 @@ package ca.bcit.comp2613.rockpaperscissorslizardspocksim;
 
 import javax.swing.table.DefaultTableModel;
 
-public class RoundThreeModel  extends DefaultTableModel {
+public class BracketTableModel  extends DefaultTableModel {
 	
 		 @Override
 		    public boolean isCellEditable(int row, int column) {

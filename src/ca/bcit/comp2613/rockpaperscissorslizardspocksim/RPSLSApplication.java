@@ -63,7 +63,7 @@ import javax.swing.Box;
 
 
 
-public class TournamentBuilder extends JFrame {
+public class RPSLSApplication extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;	
@@ -75,9 +75,9 @@ public class TournamentBuilder extends JFrame {
 	private JTextField roundsWon;
 	private JTextField roundsLost;
 	private JTextField roundsTied;		
-	private BracketModel bracketModel;
-	private RoundTwoModel roundOneModel;
-	private RoundThreeModel roundTwoModel;
+	private BracketTableModel bracketModel;
+	private RoundTwoTableModel roundOneModel;
+	private RoundThreeTableModel roundTwoModel;
 	private JLabel lblPlayerRoster;	
 	private ArrayList<Player> players;	
 	public String[] columnNames = new String[] {"ID","Name", "NPC?"};
@@ -95,7 +95,7 @@ public class TournamentBuilder extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TournamentBuilder frame = new TournamentBuilder();
+					RPSLSApplication frame = new RPSLSApplication();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -107,7 +107,7 @@ public class TournamentBuilder extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public TournamentBuilder() {
+	public RPSLSApplication() {
 		Helper helper = new Helper();
 		players = helper.populatePlayers(BRACKET_SIZE);
 		bracket = new ArrayList<ArrayList<Player>>();
@@ -296,7 +296,7 @@ public class TournamentBuilder extends JFrame {
 	
 	public void initializeView(){
 		
-		setTitle("Tournament Builder");		
+		setTitle("Rock Paper Scissors Lizard Spock");		
 				
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 763, 390);
@@ -304,7 +304,7 @@ public class TournamentBuilder extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		bracketModel = new BracketModel();
+		bracketModel = new BracketTableModel();
 		contentPane.setLayout(null);
 		table = new JTable(bracketModel);
 		table.setBounds(10, 30, 148, 248);
@@ -314,7 +314,7 @@ public class TournamentBuilder extends JFrame {
 		scrollPane.setBounds(10, 30, 150, 250);
 		getContentPane().add(scrollPane);			
 		
-		roundOneModel = new RoundTwoModel();
+		roundOneModel = new RoundTwoTableModel();
 		roundOne = new JTable(roundOneModel);
 		roundOne.setBounds(170, 30, 150, 250);
 		roundOne.setFillsViewportHeight(true);
@@ -323,7 +323,7 @@ public class TournamentBuilder extends JFrame {
 		scrollPaneOne.setBounds(170, 30, 150, 250);
 		getContentPane().add(scrollPaneOne);
 		
-		roundTwoModel = new RoundThreeModel();
+		roundTwoModel = new RoundThreeTableModel();
 		roundTwo = new JTable(roundTwoModel);
 		roundTwo.setBounds(330, 30, 150, 250);
 		roundTwo.setFillsViewportHeight(true);

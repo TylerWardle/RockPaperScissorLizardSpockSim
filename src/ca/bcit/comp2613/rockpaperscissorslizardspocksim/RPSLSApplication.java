@@ -90,7 +90,7 @@ public class RPSLSApplication extends JFrame {
 		initializeEmptyBracket();			
 		initializeView();						
 		
-		/*ConfigurableApplicationContext context = null;
+		ConfigurableApplicationContext context = null;
 		context = SpringApplication.run(H2Config.class);
 			try {
 				org.h2.tools.Server.createWebServer(null).start();
@@ -107,9 +107,8 @@ public class RPSLSApplication extends JFrame {
 		EntityManagerFactory emf = (EntityManagerFactory) context.getBean("entityManagerFactory");
 		
 		playerRepository = context.getBean(PlayerRepository.class);
-		playerRepository.save(helper.populatePlayers(BRACKET_SIZE));
 		customQueryHelper = new CustomQueryHelper(emf);
-		players = (ArrayList<Player>) copyIterator(playerRepository.findAll().iterator());	*/
+		bracket.set(0,(ArrayList<Player>) copyIterator(playerRepository.findAll().iterator()));
 		
 		int i = 0;
 		for(JTable table : tableRounds){
@@ -137,7 +136,7 @@ public class RPSLSApplication extends JFrame {
 	}
 	
 	public void populateFields(JTable selectedTable){
-		Iterator<Player> iterator = bracket.get(0).iterator();
+		Iterator<Player> iterator = bracket.get(0).iterator();		
 		try {
 			id.setText(selectedTable.getModel()
 					.getValueAt(selectedTable.getSelectedRow(), 0).toString());

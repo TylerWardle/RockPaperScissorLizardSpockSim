@@ -1,92 +1,62 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim;
-import java.awt.BorderLayout;
+
 import java.awt.EventQueue;
+//import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.List;
 
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.BoxLayout;
-
-import java.awt.List;
-import java.awt.Color;
-
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import java.awt.GridLayout;
-
-import javax.swing.JTextField;
-
-import java.awt.GridBagLayout;
-
-import javax.swing.JList;
-
-import java.awt.GridBagConstraints;
-
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.factories.FormFactory;
-
-import net.miginfocom.swing.MigLayout;
-
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import ca.bcit.comp2613.a00913377.util.Helper;
-import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.PlayerUtil;
-import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.DuplicatePlayerException;
-import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.BracketFullException;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gestures;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
-import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gestures;
-
-import java.util.ArrayList;
-import java.util.Random;
-
-import javax.swing.table.DefaultTableModel;
-
-import java.util.Iterator;
-
-import javax.swing.JTextPane;
-import javax.swing.table.TableModel;
-import javax.swing.Box;
-
-
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.repository.CustomQueryHelper;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.repository.PlayerRepository;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.BracketFullException;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.DuplicatePlayerException;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.PlayerUtil;
 
 public class RPSLSApplication extends JFrame {
 
-	private JPanel contentPane;
-	private JTable table;	
-	private JTable roundOne;
-	private JTable roundTwo;
+	private JPanel contentPane;	
 	private JTextField id;
 	private JTextField playerName;
 	private JTextField roundsPlayed;
 	private JTextField roundsWon;
 	private JTextField roundsLost;
 	private JTextField roundsTied;		
-	private BracketTableModel bracketModel;
-	private RoundTwoTableModel roundOneModel;
-	private RoundThreeTableModel roundTwoModel;
-	private JLabel lblPlayerRoster;	
-	private ArrayList<Player> players;	
-	public String[] columnNames = new String[] {"ID","Name", "NPC?"};
 	private JTextField gestureBias;
 	private JTextField txtWinner;
-	//note that brackets size may only be doubles beginning with 2 ie. 2,4,8,16,32...
-	private int BRACKET_SIZE = 8; 
-	private ArrayList<ArrayList<Player>> bracket;
-
+	private JLabel lblPlayerRoster;	
+	private List<JTable> tableRounds;		
+	private List<BracketTableModel> tables;
+	private List<List<Player>> bracket;
+	private static final int BRACKET_SIZE = 8; 
+	public String[] columnNames = new String[] {"ID","Name", "NPC?"};	
+	private static PlayerRepository playerRepository; 
+	public static CustomQueryHelper customQueryHelper;
 
 	/**
 	 * Launch the application.
@@ -104,23 +74,53 @@ public class RPSLSApplication extends JFrame {
 		});
 	}
 	
+	public static <T> List<T> copyIterator(Iterator<T> iter) {
+		List<T> copy = new ArrayList();
+		while (iter.hasNext())
+			copy.add(iter.next());
+		return copy;
+	}
+	
 	/**
 	 * Create the frame.
 	 */
-	public RPSLSApplication() {
-		Helper helper = new Helper();
-		players = helper.populatePlayers(BRACKET_SIZE);
-		bracket = new ArrayList<ArrayList<Player>>();
-		initializeEmptyBracket();		
-		initializeView();
-		initTable(table,players);
-		initTable(roundOne,bracket.get(1));
-		initTable(roundTwo,bracket.get(2));		
+	public RPSLSApplication() {		
+		tables = new ArrayList();
+		tableRounds = new ArrayList();		
+		initializeEmptyBracket();			
+		initializeView();						
 		
+		/*ConfigurableApplicationContext context = null;
+		context = SpringApplication.run(H2Config.class);
+			try {
+				org.h2.tools.Server.createWebServer(null).start();
+				DataSource dataSource = (DataSource) context.getBean("dataSource");				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+
+		for (String beanDefinitionName : context.getBeanDefinitionNames()) {
+			System.out.println(beanDefinitionName);
+		}
+
+		EntityManagerFactory emf = (EntityManagerFactory) context.getBean("entityManagerFactory");
+		
+		playerRepository = context.getBean(PlayerRepository.class);
+		playerRepository.save(helper.populatePlayers(BRACKET_SIZE));
+		customQueryHelper = new CustomQueryHelper(emf);
+		players = (ArrayList<Player>) copyIterator(playerRepository.findAll().iterator());	*/
+		
+		int i = 0;
+		for(JTable table : tableRounds){
+			initTable(table,bracket.get(i));
+			i++;
+		}
+		displayHelp();
 		
 	}
 	
-	private void initTable(final JTable selectedTable, final ArrayList<Player> fillPlayers) {
+	private void initTable(final JTable selectedTable, final List<Player> fillPlayers) {
 
 		selectedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		selectedTable.getSelectionModel().addListSelectionListener(
@@ -137,7 +137,7 @@ public class RPSLSApplication extends JFrame {
 	}
 	
 	public void populateFields(JTable selectedTable){
-		Iterator<Player> iterator = players.iterator();
+		Iterator<Player> iterator = bracket.get(0).iterator();
 		try {
 			id.setText(selectedTable.getModel()
 					.getValueAt(selectedTable.getSelectedRow(), 0).toString());
@@ -161,15 +161,15 @@ public class RPSLSApplication extends JFrame {
 	}
 	
 	public void refreshTable(){	
-		bracketModel.setDataVector(getCurrentData(players), columnNames);
-		roundOneModel.setDataVector(getCurrentData(bracket.get(1)), columnNames);
-		roundTwoModel.setDataVector(getCurrentData(bracket.get(2)), columnNames);		
-		table.repaint();
-		roundOne.repaint();
-		roundTwo.repaint();
+		int i = 0;
+		for (BracketTableModel bracketTable: tables){
+			bracketTable.setDataVector(getSelectedData(bracket.get(i)), columnNames);		
+			tableRounds.get(i).repaint();
+			i++;
+		}
 	}	
 	
-	public Object[][] getCurrentData(ArrayList<Player> playerRoster){
+	public Object[][] getSelectedData(List<Player> playerRoster){
 		Object[][] data = null;
 		
 		data = new Object[playerRoster.size()][3];
@@ -187,15 +187,12 @@ public class RPSLSApplication extends JFrame {
 	
 	public void play(){		
 		int round = 1;
-		bracket.clear();
-		initializeEmptyBracket();
-		bracket.set(0, players);
-		refreshTable();
+		fillBracket();		
+		refreshTable();		
 		
-		
-		for(ArrayList<Player> players: bracket){
+		for(List<Player> players: bracket){
 			if (players.size() > 1){
-				ArrayList<Player> winners = executeRound(players);
+				List<Player> winners = executeRound(players);
 				if (winners != null){
 					bracket.set(round, winners);
 					refreshTable();
@@ -216,11 +213,11 @@ public class RPSLSApplication extends JFrame {
 		}
 	}
 	
-	public ArrayList<Player> executeRound(ArrayList<Player> players){
+	public List<Player> executeRound(List<Player> players){
 		Iterator<Player> player = players.iterator();
 		
 		Player matchWinner;
-		ArrayList<Player> roundWinners = new ArrayList<Player>();
+		List<Player> roundWinners = new ArrayList<Player>();
 		
 		//Match specifics
 		Player playerOne;
@@ -244,8 +241,7 @@ public class RPSLSApplication extends JFrame {
 			}while(matchWinner == null);	
 			roundWinners.add(matchWinner);
 			
-		}	
-		roundWinners.trimToSize();
+		}			
 		return roundWinners;
 	}
 	
@@ -272,6 +268,12 @@ public class RPSLSApplication extends JFrame {
 			return playerOne;
 		}
 		
+	}
+	
+	public void fillBracket(){
+		while (bracket.get(0).size() < BRACKET_SIZE){
+			bracket.get(0).add(PlayerUtil.generateSimPlayer(bracket.get(0)));
+		}
 	}
 	
 	public Gestures getPlayersThrow(Player player){
@@ -303,32 +305,32 @@ public class RPSLSApplication extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		
-		bracketModel = new BracketTableModel();
+				
+		tables.add(0, new BracketTableModel());		
 		contentPane.setLayout(null);
-		table = new JTable(bracketModel);
-		table.setBounds(10, 30, 148, 248);
-		table.setFillsViewportHeight(true);
-		getContentPane().add(table);
-		JScrollPane scrollPane = new JScrollPane(table);
+		tableRounds.add(0, new JTable(tables.get(0)));
+		tableRounds.get(0).setBounds(10, 30, 148, 248);
+		tableRounds.get(0).setFillsViewportHeight(true);
+		getContentPane().add(tableRounds.get(0));
+		JScrollPane scrollPane = new JScrollPane(tableRounds.get(0));
 		scrollPane.setBounds(10, 30, 150, 250);
 		getContentPane().add(scrollPane);			
 		
-		roundOneModel = new RoundTwoTableModel();
-		roundOne = new JTable(roundOneModel);
-		roundOne.setBounds(170, 30, 150, 250);
-		roundOne.setFillsViewportHeight(true);
-		getContentPane().add(roundOne);
-		JScrollPane scrollPaneOne = new JScrollPane(roundOne);
+		tables.add(1, new BracketTableModel());	
+		tableRounds.add(1, new JTable(tables.get(1)));
+		tableRounds.get(1).setBounds(170, 30, 150, 250);
+		tableRounds.get(1).setFillsViewportHeight(true);	
+		getContentPane().add(tableRounds.get(1));
+		JScrollPane scrollPaneOne = new JScrollPane(tableRounds.get(1));
 		scrollPaneOne.setBounds(170, 30, 150, 250);
 		getContentPane().add(scrollPaneOne);
 		
-		roundTwoModel = new RoundThreeTableModel();
-		roundTwo = new JTable(roundTwoModel);
-		roundTwo.setBounds(330, 30, 150, 250);
-		roundTwo.setFillsViewportHeight(true);
-		getContentPane().add(roundTwo);
-		JScrollPane scrollPaneTwo = new JScrollPane(roundTwo);
+		tables.add(2, new BracketTableModel());	
+		tableRounds.add(2, new JTable(tables.get(2)));
+		tableRounds.get(2).setBounds(330, 30, 150, 250);
+		tableRounds.get(2).setFillsViewportHeight(true);		
+		getContentPane().add(tableRounds.get(2));
+		JScrollPane scrollPaneTwo = new JScrollPane(tableRounds.get(2));
 		scrollPaneTwo.setBounds(330, 30, 150, 250);
 		getContentPane().add(scrollPaneTwo);
 		
@@ -453,7 +455,7 @@ public class RPSLSApplication extends JFrame {
 		});
 		
 		txtWinner = new JTextField();
-		txtWinner.setBounds(492, 30, 86, 20);
+		txtWinner.setBounds(492, 30, 209, 20);
 		contentPane.add(txtWinner);
 		txtWinner.setColumns(10);
 		
@@ -468,19 +470,28 @@ public class RPSLSApplication extends JFrame {
 		JLabel lblWinner = new JLabel("Tournament Winner");
 		lblWinner.setBounds(492, 11, 131, 14);
 		contentPane.add(lblWinner);
+		
+		JButton btnHelp = new JButton("Help");
+		btnHelp.setBounds(612, 318, 89, 23);
+		contentPane.add(btnHelp);
+		btnHelp.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				displayHelp();
+			}
+		});
 	}
 	
 	public void doCreate() throws DuplicatePlayerException, BracketFullException{			
 		if (playerName != null){	
-			for(Player player : players){
+			for(Player player : bracket.get(0)){
 				if(player.getName().equals(playerName.getText())){
 					throw new DuplicatePlayerException(player);					
 				}
 			}
-			if(players.size()>= BRACKET_SIZE){
+			if(bracket.get(0).size()>= BRACKET_SIZE){
 				throw new BracketFullException();
 			}
-			players.add(new Player(PlayerUtil.getMaxID(players) + 1,playerName.getText(), 0, 0, 0, 0));
+			bracket.get(0).add(new Player(PlayerUtil.getMaxID(bracket.get(0)) + 1,playerName.getText(), 0, 0, 0, 0));
 		}
 	}		
 	
@@ -495,13 +506,13 @@ public class RPSLSApplication extends JFrame {
 		boolean nPCPlayer = false;
 		
 		if (playerName != null){	
-			for(Player player : players){
+			for(Player player : bracket.get(0)){
 				if(player.getName().equals(playerName.getText())){
 					throw new DuplicatePlayerException(player);					
 				}
 			}		
 		
-			for (Player currentPlayer: players){
+			for (Player currentPlayer: bracket.get(0)){
 				if (currentPlayer.getId() == Integer.valueOf(id.getText())){
 					rounds = currentPlayer.getRoundsPlayed(); 
 					won = currentPlayer.getRoundsWon(); 
@@ -518,11 +529,11 @@ public class RPSLSApplication extends JFrame {
 				if (nPCPlayer){
 					SimPlayer updatePlayer = new SimPlayer(Integer.valueOf(id.getText()),
 							playerName.getText(),rounds, won, lost, tied, gesture);
-					PlayerUtil.updatePlayer(players, updatePlayer);
+					PlayerUtil.updatePlayer(bracket.get(0), updatePlayer);
 				}else{
 					Player updatePlayer = new Player(Integer.valueOf(id.getText()),
 							playerName.getText(),rounds, won, lost, tied);
-					PlayerUtil.updatePlayer(players, updatePlayer);
+					PlayerUtil.updatePlayer(bracket.get(0), updatePlayer);
 				}			
 			}
 		}
@@ -531,15 +542,27 @@ public class RPSLSApplication extends JFrame {
 	public void doDelete(){
 		Player deletePlayer = new Player(Integer.valueOf(id.getText()),
 				playerName.getText(), 0, 0, 0, 0);
-		PlayerUtil.deletePlayer(players, deletePlayer);
+		PlayerUtil.deletePlayer(bracket.get(0), deletePlayer);
 		
 	}
 	
 	public void initializeEmptyBracket(){
+		bracket = new ArrayList<List<Player>>();
+		//Helper helper = new Helper();
 		int roundSize = BRACKET_SIZE;				
 		while( roundSize >= 1){
 			bracket.add(new ArrayList<Player>(roundSize));			
 			roundSize /= 2; 
-		}			
+		}
+		//bracket.set(0, helper.populatePlayers(BRACKET_SIZE));
+	}
+	
+	public void displayHelp(){
+		JOptionPane.showMessageDialog(null,"Welcome to Rock Paper Scissors Lizard Spock!\n"
+				+ " Create up to eight new players and when you're ready to start press PLAY.\n"
+				+ " You can edit and delete players in the tournament roster with the DELETE \n"
+				+ " and UPDATE buttons. Any unfilled spots in the roster will be filled with \n"
+				+ " randomly generated simulated players when you press PLAY. \n"
+				+ " To see this information again press the HELP button. Enjoy!","Help", 1);
 	}
 }

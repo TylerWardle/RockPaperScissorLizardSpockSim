@@ -1,6 +1,6 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -27,7 +27,7 @@ public class TestDriver {
 		//Empty previous players from repository 
 		playerRepository.deleteAll();
 		//generate 100 new random players
-		ArrayList<Player> players = PlayerUtil.generatePlayers(100);
+		List<Player> players = PlayerUtil.generatePlayers(100);
 		//add those players to the repository
 		playerRepository.save(players);
 		

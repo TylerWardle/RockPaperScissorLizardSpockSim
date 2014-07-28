@@ -59,6 +59,7 @@ public class Helper {
 		
 		for (int i = 0; i < amount; i++){
 			if (random.nextBoolean()){
+			//if (true){
 				players.add(new Player(i, 
 								generateName(),
 								random.nextInt(MAX_GAMES),

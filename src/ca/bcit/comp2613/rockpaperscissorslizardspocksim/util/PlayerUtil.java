@@ -1,10 +1,13 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.util;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Iterator;
 import java.util.Random;
 
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gestures;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
 
 public class PlayerUtil{
 	   
@@ -27,8 +30,8 @@ public class PlayerUtil{
 		 * Populates the players ArrayList with Amount number of randomly generated Players or SimPlayers
 		 * @param amount as an int
 		 */
-		public static ArrayList<Player> generatePlayers(int amount){
-			ArrayList<Player> players = new ArrayList<Player>();
+		public static List<Player> generatePlayers(int amount){
+			List<Player> players = new ArrayList<Player>();
 			Random random = new Random();
 			
 			for (int i = 0; i < amount; i++){
@@ -42,6 +45,10 @@ public class PlayerUtil{
 				
 			}		
 			return players;			
+		}
+		
+		public static SimPlayer generateSimPlayer(List<Player> players){			
+			return new SimPlayer(getMaxID(players) + 1 , generateName(),0,0,0,0,Gestures.getRandomGesture());			
 		}
 		
 		/**
@@ -68,7 +75,7 @@ public class PlayerUtil{
 			return name;
 		}
 		
-		public static void deletePlayer(ArrayList<Player> players, Player player) {
+		public static void deletePlayer(List<Player> players, Player player) {
 			Iterator<Player> iterator = players.iterator();
 			while (iterator.hasNext()) {
 				Player currentPlayer = iterator.next();
@@ -79,7 +86,7 @@ public class PlayerUtil{
 			}
 		}
 		
-		public static void updatePlayer(ArrayList<Player> players, Player player){
+		public static void updatePlayer(List<Player> players, Player player){
 			Iterator<Player> iterator = players.iterator();
 			while (iterator.hasNext()) {
 				Player currentPlayer = iterator.next();
@@ -93,7 +100,7 @@ public class PlayerUtil{
 			}
 		}
 		
-		public static long getMaxID(ArrayList<Player> players){
+		public static long getMaxID(List<Player> players){
 			long maxID = 0;
 			for(Player player : players){
 				if(player.getId()> maxID){

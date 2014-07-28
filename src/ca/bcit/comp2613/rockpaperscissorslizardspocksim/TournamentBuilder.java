@@ -43,6 +43,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import ca.bcit.comp2613.a00913377.util.Helper;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.PlayerUtil;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.DuplicatePlayerException;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.BracketFullException;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gestures;
@@ -73,8 +76,8 @@ public class TournamentBuilder extends JFrame {
 	private JTextField roundsLost;
 	private JTextField roundsTied;		
 	private BracketModel bracketModel;
-	private RoundOneModel roundOneModel;
-	private RoundTwoModel roundTwoModel;
+	private RoundTwoModel roundOneModel;
+	private RoundThreeModel roundTwoModel;
 	private JLabel lblPlayerRoster;	
 	private ArrayList<Player> players;	
 	public String[] columnNames = new String[] {"ID","Name", "NPC?"};
@@ -204,8 +207,12 @@ public class TournamentBuilder extends JFrame {
 			}
 		}
 		if(bracket.size() != 0){
-			txtWinner.setText(bracket.get(3).get(0).getName() + " Wins!");
-			JOptionPane.showMessageDialog(null,bracket.get(bracket.size()-1).get(0).getName()+ " wins the tournament!");
+			Player winner = bracket.get(3).get(0);
+			txtWinner.setText(winner.getName() + " Wins!");
+			JOptionPane.showMessageDialog(null,winner.getName()+ " wins the tournament! \n"
+					+ "Defeated : " + winner.getDefeatedPlayers().get(0).getName() + " "+
+					winner.getDefeatedPlayers().get(1).getName() + " "+
+					winner.getDefeatedPlayers().get(2).getName());
 		}
 	}
 	
@@ -255,11 +262,13 @@ public class TournamentBuilder extends JFrame {
 			//txtGesture.setText(playerTwo.getName() + " Wins!");
 			playerOne.setRoundsLost(playerOne.getRoundsLost()+1);
 			playerTwo.setRoundsWon(playerTwo.getRoundsWon()+1);
+			playerTwo.getDefeatedPlayers().add(playerOne);			
 			return playerTwo;
 		}else{
 			//txtGesture.setText(playerOne.getName() + " Wins!");
 			playerOne.setRoundsWon(playerOne.getRoundsWon()+1);
 			playerTwo.setRoundsLost(playerTwo.getRoundsLost()+1);
+			playerOne.getDefeatedPlayers().add(playerTwo);
 			return playerOne;
 		}
 		
@@ -305,7 +314,7 @@ public class TournamentBuilder extends JFrame {
 		scrollPane.setBounds(10, 30, 150, 250);
 		getContentPane().add(scrollPane);			
 		
-		roundOneModel = new RoundOneModel();
+		roundOneModel = new RoundTwoModel();
 		roundOne = new JTable(roundOneModel);
 		roundOne.setBounds(170, 30, 150, 250);
 		roundOne.setFillsViewportHeight(true);
@@ -314,7 +323,7 @@ public class TournamentBuilder extends JFrame {
 		scrollPaneOne.setBounds(170, 30, 150, 250);
 		getContentPane().add(scrollPaneOne);
 		
-		roundTwoModel = new RoundTwoModel();
+		roundTwoModel = new RoundThreeModel();
 		roundTwo = new JTable(roundTwoModel);
 		roundTwo.setBounds(330, 30, 150, 250);
 		roundTwo.setFillsViewportHeight(true);
@@ -386,38 +395,40 @@ public class TournamentBuilder extends JFrame {
 		lblPlayerRoster.setBounds(10, 11, 138, 14);
 		contentPane.add(lblPlayerRoster);
 		
-		JButton btnCreate = new JButton("Create");
-		btnCreate.setBounds(618, 30, 99, 25);
+		JButton btnCreate = new JButton("New Player");
+		btnCreate.setBounds(492, 145, 209, 25);
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				doCreate();
+				try{
+					doCreate();
+					refreshTable();
+				}catch(RuntimeException error){					
+					JOptionPane.showMessageDialog(null, error, "Error", JOptionPane.ERROR_MESSAGE);
+				}							
 			}
 		});
 		getContentPane().add(btnCreate);
-		
-		JButton btnList = new JButton("Refresh");
-		btnList.setBounds(618, 93, 99, 25);
-		btnList.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				refreshTable();
-			}
-		});
-		getContentPane().add(btnList);
-		
-		JButton btnUpdate = new JButton("Update");
-		btnUpdate.setBounds(618, 156, 99, 25);
+				
+		JButton btnUpdate = new JButton("Update Selected Player");
+		btnUpdate.setBounds(492, 200, 209, 25);
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				doUpdate();
+				try{
+					doUpdate();
+					refreshTable();
+				}catch(RuntimeException error){
+					JOptionPane.showMessageDialog(null, error, "Error", JOptionPane.ERROR_MESSAGE);
+				}					
 			}
 		});
 		getContentPane().add(btnUpdate);
 		
-		JButton btnDelete = new JButton("Delete");
-		btnDelete.setBounds(618, 219, 99, 25);
+		JButton btnDelete = new JButton("Delete Selected Player");
+		btnDelete.setBounds(492, 255, 209, 25);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				doDelete();
+				refreshTable();
 			}
 		});
 		getContentPane().add(btnDelete);
@@ -433,7 +444,7 @@ public class TournamentBuilder extends JFrame {
 		contentPane.add(lblGestureBias);
 		
 		JButton btnPlay = new JButton("Play");
-		btnPlay.setBounds(618, 282, 99, 23);
+		btnPlay.setBounds(492, 92, 209, 23);
 		contentPane.add(btnPlay);
 		btnPlay.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
@@ -442,47 +453,39 @@ public class TournamentBuilder extends JFrame {
 		});
 		
 		txtWinner = new JTextField();
-		txtWinner.setBounds(490, 30, 86, 20);
+		txtWinner.setBounds(492, 30, 86, 20);
 		contentPane.add(txtWinner);
 		txtWinner.setColumns(10);
 		
-		JLabel lblRoundOneWinners = new JLabel("Round One Winners");
+		JLabel lblRoundOneWinners = new JLabel("Round Two");
 		lblRoundOneWinners.setBounds(170, 11, 148, 14);
 		contentPane.add(lblRoundOneWinners);
 		
-		JLabel lblRoundTwoWinners = new JLabel("Round Two Winners");
+		JLabel lblRoundTwoWinners = new JLabel("Round Three");
 		lblRoundTwoWinners.setBounds(330, 11, 148, 14);
 		contentPane.add(lblRoundTwoWinners);
 		
 		JLabel lblWinner = new JLabel("Tournament Winner");
-		lblWinner.setBounds(490, 11, 131, 14);
+		lblWinner.setBounds(492, 11, 131, 14);
 		contentPane.add(lblWinner);
-		
-		Box verticalBox = Box.createVerticalBox();
-		verticalBox.setBounds(600, 30, 138, 309);
-		contentPane.add(verticalBox);		
 	}
 	
-	public void doCreate(){
-		if (playerName != null && roundsPlayed != null && roundsWon != null &&
-				roundsLost!= null && roundsTied != null){
-			//players.add(new Player(players.size() + 1,
-			//	playerName.getText(), 
-			//	Integer.valueOf(roundsPlayed.getText()), 
-			//	Integer.valueOf(roundsWon.getText()), 
-			//	Integer.valueOf(roundsLost.getText()), 
-			//	Integer.valueOf(roundsTied.getText())));
-			players.add(new Player(players.size() + 1,playerName.getText(), 0, 0, 0, 0));
-
+	public void doCreate() throws DuplicatePlayerException, BracketFullException{			
+		if (playerName != null){	
+			for(Player player : players){
+				if(player.getName().equals(playerName.getText())){
+					throw new DuplicatePlayerException(player);					
+				}
+			}
+			if(players.size()>= BRACKET_SIZE){
+				throw new BracketFullException();
+			}
+			players.add(new Player(PlayerUtil.getMaxID(players) + 1,playerName.getText(), 0, 0, 0, 0));
 		}
 	}		
-	public void doUpdate(){
-		//Player updatePlayer = new Player(Integer.valueOf(id.getText()),
-		//		playerName.getText(), 
-		//		Integer.valueOf(roundsPlayed.getText()), 
-		//		Integer.valueOf(roundsWon.getText()), 
-		//		Integer.valueOf(roundsLost.getText()), 
-		//		Integer.valueOf(roundsTied.getText()));
+	
+	public void doUpdate() throws DuplicatePlayerException{
+		
 		int rounds =0;
 		int won =0;
 		int	lost =0;
@@ -491,36 +494,44 @@ public class TournamentBuilder extends JFrame {
 		boolean playerFound = false;
 		boolean nPCPlayer = false;
 		
-		for (Player currentPlayer: players){
-			if (currentPlayer.getId() == Integer.valueOf(id.getText())){
-				rounds = currentPlayer.getRoundsPlayed(); 
-				won = currentPlayer.getRoundsWon(); 
-				lost = currentPlayer.getRoundsLost();
-				tied = currentPlayer.getRoundsTied();
-				playerFound = true;
-				if (currentPlayer instanceof SimPlayer){
-					nPCPlayer = true;
-					gesture = ((SimPlayer) currentPlayer).getGestureBias();		
+		if (playerName != null){	
+			for(Player player : players){
+				if(player.getName().equals(playerName.getText())){
+					throw new DuplicatePlayerException(player);					
 				}
+			}		
+		
+			for (Player currentPlayer: players){
+				if (currentPlayer.getId() == Integer.valueOf(id.getText())){
+					rounds = currentPlayer.getRoundsPlayed(); 
+					won = currentPlayer.getRoundsWon(); 
+					lost = currentPlayer.getRoundsLost();
+					tied = currentPlayer.getRoundsTied();
+					playerFound = true;
+					if (currentPlayer instanceof SimPlayer){
+						nPCPlayer = true;
+						gesture = ((SimPlayer) currentPlayer).getGestureBias();		
+					}
+				}	
 			}	
-		}	
-		if(playerFound){
-			if (nPCPlayer){
-				SimPlayer updatePlayer = new SimPlayer(Integer.valueOf(id.getText()),
-					playerName.getText(),rounds, won, lost, tied, gesture);
-				Helper.updatePlayer(players, updatePlayer);
-			}else{
-				Player updatePlayer = new Player(Integer.valueOf(id.getText()),
-						playerName.getText(),rounds, won, lost, tied);
-				Helper.updatePlayer(players, updatePlayer);
-			}			
+			if(playerFound){
+				if (nPCPlayer){
+					SimPlayer updatePlayer = new SimPlayer(Integer.valueOf(id.getText()),
+							playerName.getText(),rounds, won, lost, tied, gesture);
+					PlayerUtil.updatePlayer(players, updatePlayer);
+				}else{
+					Player updatePlayer = new Player(Integer.valueOf(id.getText()),
+							playerName.getText(),rounds, won, lost, tied);
+					PlayerUtil.updatePlayer(players, updatePlayer);
+				}			
+			}
 		}
 	}
 	
 	public void doDelete(){
 		Player deletePlayer = new Player(Integer.valueOf(id.getText()),
 				playerName.getText(), 0, 0, 0, 0);
-		Helper.deletePlayer(players, deletePlayer);
+		PlayerUtil.deletePlayer(players, deletePlayer);
 		
 	}
 	

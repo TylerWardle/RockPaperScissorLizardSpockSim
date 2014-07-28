@@ -40,7 +40,7 @@ public class TestDriver {
 		Collections.sort(players);
 		log.info("Sorted list of players");
 		for (Player player: players){
-			log.info("Name: " + player.getName() + " number of team mates: " + player.getTeamMembers().size());
+			log.info("Name: " + player.getName() + " number of team mates: " + player.getDefeatedPlayers().size());
 		}
 	}
 	
@@ -89,10 +89,10 @@ public class TestDriver {
 		ArrayList<Player> playersOnTeams = new ArrayList<Player>();
 		
 		for (Player player : players){
-			if(player.getTeamMembers().size() >= MIN_TEAM_SIZE && !playersOnTeams.contains(player)){
+			if(player.getDefeatedPlayers().size() >= MIN_TEAM_SIZE && !playersOnTeams.contains(player)){
 				log.info("Team Members of " + player.getName() + "'s team");
 				playersOnTeams.add(player);
-				for(Player teamMember : player.getTeamMembers()){
+				for(Player teamMember : player.getDefeatedPlayers()){
 					log.info(teamMember.getName() + " ");
 					playersOnTeams.add(teamMember);
 				}

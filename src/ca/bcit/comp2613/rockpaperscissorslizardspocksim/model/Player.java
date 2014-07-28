@@ -1,5 +1,6 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -30,7 +31,7 @@ public class Player implements Comparable<Player>{
 	private Integer roundsLost;
 	private Integer roundsTied;	
 	@ManyToMany(cascade = CascadeType.ALL)
-	private List<Player> teamMembers;
+	private List<Player> defeatedPlayers;
 	
 	/**
 	 * Default constructor 
@@ -42,7 +43,8 @@ public class Player implements Comparable<Player>{
 		this.roundsPlayed = 0;
 		this.roundsWon = 0;
 		this.roundsLost = 0;
-		this.roundsTied = 0;				
+		this.roundsTied = 0;		
+		this.defeatedPlayers = new ArrayList<Player>();
 	}
 		
 	/**
@@ -63,7 +65,8 @@ public class Player implements Comparable<Player>{
 		this.roundsPlayed = roundsPlayed;
 		this.roundsWon = roundsWon;
 		this.roundsLost = roundsLost;
-		this.roundsTied = roundsTied;	
+		this.roundsTied = roundsTied;
+		this.defeatedPlayers = new ArrayList<Player>();
 	}
 
 	/**
@@ -79,9 +82,9 @@ public class Player implements Comparable<Player>{
 	public int compareTo(Player player){
 		int retval = this.getName().compareTo(player.getName());
 		if (retval == 0){
-			if (this.getTeamMembers().size() < player.getTeamMembers().size()){
+			if (this.getDefeatedPlayers().size() < player.getDefeatedPlayers().size()){
 				retval = 1;
-			}else if (this.getTeamMembers().size() > player.getTeamMembers().size()){
+			}else if (this.getDefeatedPlayers().size() > player.getDefeatedPlayers().size()){
 				retval = -1;
 			}			 
 		}		
@@ -185,18 +188,18 @@ public class Player implements Comparable<Player>{
 	}
 	
 	/**
-	 * get team members
-	 * @return teamMembers as an ArrayList of Players
+	 * get defeated players
+	 * @return defeatedPlayers as an ArrayList of Players
 	 */	
-	public List<Player> getTeamMembers(){
-		return teamMembers;
+	public List<Player> getDefeatedPlayers(){
+		return defeatedPlayers;
 	}
 	
 	/**
-	 * set team members
-	 * @param teamMembers as an ArrayList of Players
+	 * set defeated players
+	 * @param defeatedPlayers as an ArrayList of Players
 	 */
-	public void setTeamMembers(List<Player> teamMembers){
-		this.teamMembers = teamMembers;
+	public void setDefeatedPlayers(List<Player> defeatedPlayers){
+		this.defeatedPlayers = defeatedPlayers;
 	}
 }

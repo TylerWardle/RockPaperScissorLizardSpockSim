@@ -37,10 +37,5 @@ import org.h2.tools.Server;
 </bean>
  */
 public class H2Config {
-	//static {
-	//	try {
-	//		org.h2.tools.Server.createWebServer("-webPort", "8080").start();
-	//	} catch (SQLException e) {
-	//	}
-	//}
+	
 }

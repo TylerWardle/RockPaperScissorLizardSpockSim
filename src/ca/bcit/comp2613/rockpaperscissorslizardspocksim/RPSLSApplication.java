@@ -75,7 +75,7 @@ public class RPSLSApplication extends JFrame {
 	}
 	
 	public static <T> List<T> copyIterator(Iterator<T> iter) {
-		List<T> copy = new ArrayList();
+		List<T> copy = new ArrayList<T>();
 		while (iter.hasNext())
 			copy.add(iter.next());
 		return copy;
@@ -85,8 +85,8 @@ public class RPSLSApplication extends JFrame {
 	 * Create the frame.
 	 */
 	public RPSLSApplication() {		
-		tables = new ArrayList();
-		tableRounds = new ArrayList();		
+		tables = new ArrayList<BracketTableModel>();
+		tableRounds = new ArrayList<JTable>();		
 		initializeEmptyBracket();			
 		initializeView();						
 		
@@ -94,15 +94,15 @@ public class RPSLSApplication extends JFrame {
 		context = SpringApplication.run(H2Config.class);
 			try {
 				org.h2.tools.Server.createWebServer(null).start();
-				DataSource dataSource = (DataSource) context.getBean("dataSource");				
+				//DataSource dataSource = (DataSource) context.getBean("dataSource");				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		
 
-		for (String beanDefinitionName : context.getBeanDefinitionNames()) {
-			System.out.println(beanDefinitionName);
-		}
+		//for (String beanDefinitionName : context.getBeanDefinitionNames()) {
+		//	System.out.println(beanDefinitionName);
+		//}
 
 		EntityManagerFactory emf = (EntityManagerFactory) context.getBean("entityManagerFactory");
 		
@@ -162,7 +162,8 @@ public class RPSLSApplication extends JFrame {
 	public void refreshTable(){	
 		int i = 0;
 		for (BracketTableModel bracketTable: tables){
-			bracketTable.setDataVector(getSelectedData(bracket.get(i)), columnNames);		
+			bracketTable.setDataVector(getSelectedData(bracket.get(i)), columnNames);	
+			bracket.set(0,(ArrayList<Player>) copyIterator(playerRepository.findAll().iterator()));
 			tableRounds.get(i).repaint();
 			i++;
 		}
@@ -402,7 +403,6 @@ public class RPSLSApplication extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try{
 					doCreate();
-					refreshTable();
 				}catch(RuntimeException error){					
 					JOptionPane.showMessageDialog(null, error, "Error", JOptionPane.ERROR_MESSAGE);
 				}							
@@ -415,8 +415,7 @@ public class RPSLSApplication extends JFrame {
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try{
-					doUpdate();
-					refreshTable();
+					doUpdate();					
 				}catch(RuntimeException error){
 					JOptionPane.showMessageDialog(null, error, "Error", JOptionPane.ERROR_MESSAGE);
 				}					
@@ -428,8 +427,7 @@ public class RPSLSApplication extends JFrame {
 		btnDelete.setBounds(492, 255, 209, 25);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				doDelete();
-				refreshTable();
+				doDelete();				
 			}
 		});
 		getContentPane().add(btnDelete);
@@ -480,18 +478,24 @@ public class RPSLSApplication extends JFrame {
 		});
 	}
 	
-	public void doCreate() throws DuplicatePlayerException, BracketFullException{			
-		if (playerName != null){	
-			for(Player player : bracket.get(0)){
-				if(player.getName().equals(playerName.getText())){
-					throw new DuplicatePlayerException(player);					
-				}
-			}
-			if(bracket.get(0).size()>= BRACKET_SIZE){
-				throw new BracketFullException();
-			}
-			bracket.get(0).add(new Player(PlayerUtil.getMaxID(bracket.get(0)) + 1,playerName.getText(), 0, 0, 0, 0));
-		}
+	public void doCreate() throws DuplicatePlayerException, BracketFullException{		
+		//if (playerName != null){	
+		//	for(Player player : bracket.get(0)){
+		//		if(player.getName().equals(playerName.getText())){
+		//			throw new DuplicatePlayerException(player);					
+		//		}
+		//	}
+		//	if(bracket.get(0).size()>= BRACKET_SIZE){
+		//		throw new BracketFullException();
+		//	}
+		//	bracket.get(0).add(new Player(PlayerUtil.getMaxID(bracket.get(0)) + 1,playerName.getText(), 0, 0, 0, 0));
+		//}
+		
+		Player player = new Player();		
+		player.setName(playerName.getText());
+		player.setId(PlayerUtil.getMaxID(bracket.get(0))+1);
+		playerRepository.save(player);
+		refreshTable();
 	}		
 	
 	public void doUpdate() throws DuplicatePlayerException{
@@ -536,24 +540,24 @@ public class RPSLSApplication extends JFrame {
 				}			
 			}
 		}
+		refreshTable();
 	}
 	
 	public void doDelete(){
-		Player deletePlayer = new Player(Integer.valueOf(id.getText()),
-				playerName.getText(), 0, 0, 0, 0);
-		PlayerUtil.deletePlayer(bracket.get(0), deletePlayer);
-		
+		//Player deletePlayer = new Player(Integer.valueOf(id.getText()),
+		//		playerName.getText(), 0, 0, 0, 0);
+		//PlayerUtil.deletePlayer(bracket.get(0), deletePlayer);
+		playerRepository.delete(playerName.getText());		
+		refreshTable();
 	}
 	
 	public void initializeEmptyBracket(){
 		bracket = new ArrayList<List<Player>>();
-		//Helper helper = new Helper();
 		int roundSize = BRACKET_SIZE;				
 		while( roundSize >= 1){
 			bracket.add(new ArrayList<Player>(roundSize));			
 			roundSize /= 2; 
 		}
-		//bracket.set(0, helper.populatePlayers(BRACKET_SIZE));
 	}
 	
 	public void displayHelp(){

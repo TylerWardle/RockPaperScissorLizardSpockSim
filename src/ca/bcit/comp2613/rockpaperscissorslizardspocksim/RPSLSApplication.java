@@ -28,12 +28,12 @@ import javax.swing.event.ListSelectionListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import ca.bcit.comp2613.a00913377.util.Helper;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gestures;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.PlayerEntity;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
-import ca.bcit.comp2613.rockpaperscissorslizardspocksim.repository.CustomQueryHelper;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.repository.PlayerRepository;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.repository.SimPlayerRepository;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.BracketFullException;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.DuplicatePlayerException;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.PlayerUtil;
@@ -52,11 +52,12 @@ public class RPSLSApplication extends JFrame {
 	private JLabel lblPlayerRoster;	
 	private List<JTable> tableRounds;		
 	private List<BracketTableModel> tables;
-	private List<List<Player>> bracket;
+	private List<List<PlayerEntity>> bracket;
 	private static final int BRACKET_SIZE = 8; 
 	public String[] columnNames = new String[] {"ID","Name", "NPC?"};	
-	private static PlayerRepository playerRepository; 
-	public static CustomQueryHelper customQueryHelper;
+	private static PlayerRepository playerRepository;
+	private static SimPlayerRepository simPlayerRepository; 
+	
 
 	/**
 	 * Launch the application.
@@ -93,22 +94,17 @@ public class RPSLSApplication extends JFrame {
 		ConfigurableApplicationContext context = null;
 		context = SpringApplication.run(H2Config.class);
 			try {
-				org.h2.tools.Server.createWebServer(null).start();
-				//DataSource dataSource = (DataSource) context.getBean("dataSource");				
+				org.h2.tools.Server.createWebServer(null).start();			
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		
-
-		//for (String beanDefinitionName : context.getBeanDefinitionNames()) {
-		//	System.out.println(beanDefinitionName);
-		//}
-
+		
 		EntityManagerFactory emf = (EntityManagerFactory) context.getBean("entityManagerFactory");
 		
 		playerRepository = context.getBean(PlayerRepository.class);
-		customQueryHelper = new CustomQueryHelper(emf);
-		bracket.set(0,(ArrayList<Player>) copyIterator(playerRepository.findAll().iterator()));
+		simPlayerRepository = context.getBean(SimPlayerRepository.class);			
+		bracket.set(0,getPlayerEntitiesInBracket());				
 		
 		int i = 0;
 		for(JTable table : tableRounds){
@@ -119,7 +115,7 @@ public class RPSLSApplication extends JFrame {
 		
 	}
 	
-	private void initTable(final JTable selectedTable, final List<Player> fillPlayers) {
+	private void initTable(final JTable selectedTable, final List<PlayerEntity> fillPlayers) {
 
 		selectedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		selectedTable.getSelectionModel().addListSelectionListener(
@@ -135,15 +131,22 @@ public class RPSLSApplication extends JFrame {
 		refreshTable();
 	}
 	
+	public List<PlayerEntity> getPlayerEntitiesInBracket(){
+		ArrayList<PlayerEntity> allPlayers = new ArrayList<PlayerEntity>();
+		allPlayers.addAll(copyIterator(playerRepository.findAll().iterator()));
+		allPlayers.addAll(copyIterator(simPlayerRepository.findAll().iterator()));
+		return allPlayers;
+	}
+	
 	public void populateFields(JTable selectedTable){
-		Iterator<Player> iterator = bracket.get(0).iterator();		
+		Iterator<PlayerEntity> iterator = bracket.get(0).iterator();		
 		try {
 			id.setText(selectedTable.getModel()
 					.getValueAt(selectedTable.getSelectedRow(), 0).toString());
 			playerName.setText(selectedTable.getModel()
 					.getValueAt(selectedTable.getSelectedRow(), 1).toString());
 			while (iterator.hasNext()){
-				Player currentPlayer = iterator.next();
+				PlayerEntity currentPlayer = iterator.next();
 				if (currentPlayer.getName().equals(playerName.getText())){
 					roundsPlayed.setText(currentPlayer.getRoundsPlayed().toString());
 					roundsWon.setText(currentPlayer.getRoundsWon().toString());
@@ -152,7 +155,7 @@ public class RPSLSApplication extends JFrame {
 					if (currentPlayer instanceof SimPlayer){
 						gestureBias.setText(((SimPlayer) currentPlayer).getGestureBias().getDescription());
 					}else{
-						gestureBias.setText("N/A");
+						gestureBias.setText("");
 					}
 				}
 			}					
@@ -162,19 +165,20 @@ public class RPSLSApplication extends JFrame {
 	public void refreshTable(){	
 		int i = 0;
 		for (BracketTableModel bracketTable: tables){
-			bracketTable.setDataVector(getSelectedData(bracket.get(i)), columnNames);	
-			bracket.set(0,(ArrayList<Player>) copyIterator(playerRepository.findAll().iterator()));
+			//bracket.set(0, copyIterator(playerRepository.findAll().iterator()));
+			bracket.set(0, getPlayerEntitiesInBracket());
+			bracketTable.setDataVector(getSelectedData(bracket.get(i)), columnNames);				
 			tableRounds.get(i).repaint();
 			i++;
 		}
 	}	
 	
-	public Object[][] getSelectedData(List<Player> playerRoster){
+	public Object[][] getSelectedData(List<PlayerEntity> playerRoster){
 		Object[][] data = null;
 		
 		data = new Object[playerRoster.size()][3];
 		int i = 0;
-		for (Player player : playerRoster) {
+		for (PlayerEntity player : playerRoster) {
 			data[i][0] = player.getId();
 			data[i][1] = player.getName();
 			if (player instanceof SimPlayer){
@@ -187,12 +191,11 @@ public class RPSLSApplication extends JFrame {
 	
 	public void play(){		
 		int round = 1;
-		fillBracket();		
-		refreshTable();		
+		fillBracket();				
 		
-		for(List<Player> players: bracket){
+		for(List<PlayerEntity> players: bracket){
 			if (players.size() > 1){
-				List<Player> winners = executeRound(players);
+				List<PlayerEntity> winners = executeRound(players);
 				if (winners != null){
 					bracket.set(round, winners);
 					refreshTable();
@@ -204,25 +207,26 @@ public class RPSLSApplication extends JFrame {
 			}
 		}
 		if(bracket.size() != 0){
-			Player winner = bracket.get(3).get(0);
+			PlayerEntity winner = bracket.get(3).get(0);
 			txtWinner.setText(winner.getName() + " Wins!");
-			JOptionPane.showMessageDialog(null,winner.getName()+ " wins the tournament! \n"
-					+ "Defeated : " + winner.getDefeatedPlayers().get(0).getName() + " "+
-					winner.getDefeatedPlayers().get(1).getName() + " "+
-					winner.getDefeatedPlayers().get(2).getName());
+			JOptionPane.showMessageDialog(null,winner.getName()+ " wins the tournament!");
+			//JOptionPane.showMessageDialog(null,winner.getName()+ " wins the tournament! \n"
+			//		+ "Defeated : " + winner.getDefeatedPlayers().get(0).getName() + " "+
+			//		winner.getDefeatedPlayers().get(1).getName() + " "+
+			//		winner.getDefeatedPlayers().get(2).getName());
 		}
 	}
 	
-	public List<Player> executeRound(List<Player> players){
-		Iterator<Player> player = players.iterator();
+	public List<PlayerEntity> executeRound(List<PlayerEntity> players){
+		Iterator<PlayerEntity> player = players.iterator();
 		
-		Player matchWinner;
-		List<Player> roundWinners = new ArrayList<Player>();
+		PlayerEntity matchWinner;
+		List<PlayerEntity> roundWinners = new ArrayList<PlayerEntity>();
 		
 		//Match specifics
-		Player playerOne;
+		PlayerEntity playerOne;
 		Gestures playerOneThrow;
-		Player playerTwo;
+		PlayerEntity playerTwo;
 		Gestures playerTwoThrow;
 		
 		//step through the players participating in the round and play one against the next 
@@ -245,7 +249,7 @@ public class RPSLSApplication extends JFrame {
 		return roundWinners;
 	}
 	
-	public Player updateScore(Player playerOne, Player playerTwo, Gestures playerOneThrow, Gestures playerTwoThrow){
+	public PlayerEntity updateScore(PlayerEntity playerOne, PlayerEntity playerTwo, Gestures playerOneThrow, Gestures playerTwoThrow){
 		
 		playerOne.setRoundsPlayed(playerOne.getRoundsPlayed()+1);
 		playerTwo.setRoundsPlayed(playerTwo.getRoundsPlayed()+1);
@@ -258,13 +262,19 @@ public class RPSLSApplication extends JFrame {
 			//txtGesture.setText(playerTwo.getName() + " Wins!");
 			playerOne.setRoundsLost(playerOne.getRoundsLost()+1);
 			playerTwo.setRoundsWon(playerTwo.getRoundsWon()+1);
-			playerTwo.getDefeatedPlayers().add(playerOne);			
+			//if (playerOne instanceof Player){
+			//	playerTwo.getDefeatedPlayers().add((Player) playerOne);
+			//}
+			//playerTwo.getDefeatedSimPlayers().add((SimPlayer) playerOne);			
 			return playerTwo;
 		}else{
 			//txtGesture.setText(playerOne.getName() + " Wins!");
 			playerOne.setRoundsWon(playerOne.getRoundsWon()+1);
 			playerTwo.setRoundsLost(playerTwo.getRoundsLost()+1);
-			playerOne.getDefeatedPlayers().add(playerTwo);
+			//if (playerTwo instanceof Player){
+			//	playerOne.getDefeatedPlayers().add((Player)playerTwo);
+			//}
+			//simPlayerRepository.findOne(playerOne.getId()).getDefeatedSimPlayers().add((SimPlayer)playerTwo);			
 			return playerOne;
 		}
 		
@@ -272,11 +282,15 @@ public class RPSLSApplication extends JFrame {
 	
 	public void fillBracket(){
 		while (bracket.get(0).size() < BRACKET_SIZE){
-			bracket.get(0).add(PlayerUtil.generateSimPlayer(bracket.get(0)));
+			SimPlayer simPlayer = new SimPlayer();
+			simPlayer = PlayerUtil.generateSimPlayer(bracket.get(0));
+			bracket.get(0).add(simPlayer);
+			simPlayerRepository.save(simPlayer);
 		}
+		refreshTable();
 	}
 	
-	public Gestures getPlayersThrow(Player player){
+	public Gestures getPlayersThrow(PlayerEntity player){
 		Random random = new Random();
 		if(player instanceof SimPlayer){
 			if (random.nextBoolean()){
@@ -478,44 +492,52 @@ public class RPSLSApplication extends JFrame {
 		});
 	}
 	
-	public void doCreate() throws DuplicatePlayerException, BracketFullException{		
-		//if (playerName != null){	
-		//	for(Player player : bracket.get(0)){
-		//		if(player.getName().equals(playerName.getText())){
-		//			throw new DuplicatePlayerException(player);					
-		//		}
-		//	}
-		//	if(bracket.get(0).size()>= BRACKET_SIZE){
-		//		throw new BracketFullException();
-		//	}
-		//	bracket.get(0).add(new Player(PlayerUtil.getMaxID(bracket.get(0)) + 1,playerName.getText(), 0, 0, 0, 0));
-		//}
-		
-		Player player = new Player();		
-		player.setName(playerName.getText());
-		player.setId(PlayerUtil.getMaxID(bracket.get(0))+1);
-		playerRepository.save(player);
-		refreshTable();
+	public void doCreate() throws DuplicatePlayerException, BracketFullException{			
+		if (playerName != null){
+			if(bracket.get(0).size()>= BRACKET_SIZE){
+				throw new BracketFullException();
+			}else if (playerRepository.findByName(playerName.getText()) != null){
+				throw new DuplicatePlayerException(playerRepository.findByName(playerName.getText()));
+			}							
+			Player player = new Player();		
+			player.setName(playerName.getText());
+			player.setId(PlayerUtil.getMaxID(bracket.get(0))+1);
+			playerRepository.save(player);
+			refreshTable();			
+		}
 	}		
 	
 	public void doUpdate() throws DuplicatePlayerException{
 		
-		int rounds =0;
+		/*int rounds =0;
 		int won =0;
 		int	lost =0;
 		int tied =0;
 		Gestures gesture = Gestures.getRandomGesture();
 		boolean playerFound = false;
-		boolean nPCPlayer = false;
+		boolean nPCPlayer = false;*/
 		
 		if (playerName != null){	
-			for(Player player : bracket.get(0)){
-				if(player.getName().equals(playerName.getText())){
-					throw new DuplicatePlayerException(player);					
-				}
-			}		
-		
-			for (Player currentPlayer: bracket.get(0)){
+			//for(PlayerEntity player : bracket.get(0)){
+			//	if(player.getName().equals(playerName.getText())){
+			//		throw new DuplicatePlayerException(player);					
+			//	}
+			//}	
+			if (playerRepository.findByName(playerName.getText()) != null || simPlayerRepository.findByName(playerName.getText())!= null){
+				throw new DuplicatePlayerException(playerRepository.findByName(playerName.getText()));
+			}	
+			
+			if (playerRepository.findOne(Long.valueOf(id.getText())) != null){
+				Player player = playerRepository.findOne(Long.valueOf(id.getText()));
+				player.setName(playerName.getText());
+				playerRepository.save(player);				
+			}else{
+				SimPlayer simPlayer = simPlayerRepository.findOne(Long.valueOf(id.getText()));
+				simPlayer.setName(playerName.getText());
+				simPlayerRepository.save(simPlayer);	
+			}	
+					
+			/*for (PlayerEntity currentPlayer: bracket.get(0)){
 				if (currentPlayer.getId() == Integer.valueOf(id.getText())){
 					rounds = currentPlayer.getRoundsPlayed(); 
 					won = currentPlayer.getRoundsWon(); 
@@ -538,24 +560,25 @@ public class RPSLSApplication extends JFrame {
 							playerName.getText(),rounds, won, lost, tied);
 					PlayerUtil.updatePlayer(bracket.get(0), updatePlayer);
 				}			
-			}
-		}
+			}*/
+		}			
 		refreshTable();
 	}
 	
 	public void doDelete(){
-		//Player deletePlayer = new Player(Integer.valueOf(id.getText()),
-		//		playerName.getText(), 0, 0, 0, 0);
-		//PlayerUtil.deletePlayer(bracket.get(0), deletePlayer);
-		playerRepository.delete(playerName.getText());		
+		if (playerRepository.findByName(playerName.getText()) != null){
+			playerRepository.delete(Long.valueOf(id.getText()));	
+		}else{
+			simPlayerRepository.delete(Long.valueOf(id.getText()));
+		}
 		refreshTable();
 	}
 	
 	public void initializeEmptyBracket(){
-		bracket = new ArrayList<List<Player>>();
+		bracket = new ArrayList<List<PlayerEntity>>();
 		int roundSize = BRACKET_SIZE;				
 		while( roundSize >= 1){
-			bracket.add(new ArrayList<Player>(roundSize));			
+			bracket.add(new ArrayList<PlayerEntity>(roundSize));			
 			roundSize /= 2; 
 		}
 	}

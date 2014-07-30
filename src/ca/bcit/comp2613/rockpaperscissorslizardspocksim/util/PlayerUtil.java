@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gestures;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.PlayerEntity;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
 
@@ -30,8 +31,8 @@ public class PlayerUtil{
 		 * Populates the players ArrayList with Amount number of randomly generated Players or SimPlayers
 		 * @param amount as an int
 		 */
-		public static List<Player> generatePlayers(int amount){
-			List<Player> players = new ArrayList<Player>();
+		public static List<PlayerEntity> generatePlayers(int amount){
+			List<PlayerEntity> players = new ArrayList<PlayerEntity>();
 			Random random = new Random();
 			
 			for (int i = 0; i < amount; i++){
@@ -47,7 +48,7 @@ public class PlayerUtil{
 			return players;			
 		}
 		
-		public static SimPlayer generateSimPlayer(List<Player> players){			
+		public static SimPlayer generateSimPlayer(List<PlayerEntity> players){			
 			return new SimPlayer(getMaxID(players) + 1 , generateName(),0,0,0,0,Gestures.getRandomGesture());			
 		}
 		
@@ -75,10 +76,10 @@ public class PlayerUtil{
 			return name;
 		}
 		
-		public static void deletePlayer(List<Player> players, Player player) {
-			Iterator<Player> iterator = players.iterator();
+		public static void deletePlayer(List<PlayerEntity> players, PlayerEntity player) {
+			Iterator<PlayerEntity> iterator = players.iterator();
 			while (iterator.hasNext()) {
-				Player currentPlayer = iterator.next();
+				PlayerEntity currentPlayer = iterator.next();
 				if (currentPlayer.getId() == player.getId()) {
 					iterator.remove();
 					break;
@@ -86,10 +87,10 @@ public class PlayerUtil{
 			}
 		}
 		
-		public static void updatePlayer(List<Player> players, Player player){
-			Iterator<Player> iterator = players.iterator();
+		public static void updatePlayer(List<PlayerEntity> players, PlayerEntity player){
+			Iterator<PlayerEntity> iterator = players.iterator();
 			while (iterator.hasNext()) {
-				Player currentPlayer = iterator.next();
+				PlayerEntity currentPlayer = iterator.next();
 				if (currentPlayer.getId() == player.getId()) {
 					//currentPlayer = player;
 					int index = players.indexOf(currentPlayer);
@@ -100,9 +101,9 @@ public class PlayerUtil{
 			}
 		}
 		
-		public static long getMaxID(List<Player> players){
+		public static long getMaxID(List<PlayerEntity> players){
 			long maxID = 0;
-			for(Player player : players){
+			for(PlayerEntity player : players){
 				if(player.getId()> maxID){
 					maxID = player.getId();
 				}

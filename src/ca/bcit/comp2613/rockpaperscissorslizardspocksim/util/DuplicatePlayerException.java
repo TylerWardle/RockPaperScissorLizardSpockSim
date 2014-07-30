@@ -1,11 +1,11 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.util;
 
-import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.PlayerEntity;
 
 public class DuplicatePlayerException extends RuntimeException{
-	private Player player;
+	private PlayerEntity player;
 	
-	public DuplicatePlayerException(Player player){
+	public DuplicatePlayerException(PlayerEntity player){
 		this.player = player;
 	}
 	

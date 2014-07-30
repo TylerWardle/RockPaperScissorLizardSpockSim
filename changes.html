@@ -243,7 +243,12 @@
 	<div class="post-content" itemprop= " articleBody">
 	Refactored TournamentBuilder to rename it as RPSLSApplication
 	<br>
-	
+	Decided to remove the defeatedPlayers Lists from the player and SimPlayer models. was having trouble realizing 
+	the many to many relationship in the H2Database.
+	<br>
+	Added the PlayerEntity interface which Player and SimPlayer implement. This allows me to populate my tables with both 
+	players and simPlayers more easily.
+	<br> 
 	
 	</div>
 </div>

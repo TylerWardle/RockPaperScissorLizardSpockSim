@@ -21,7 +21,8 @@ import org.hibernate.annotations.FetchMode;
  */
 
 @Entity
-public class Player implements Comparable<Player>{
+public class Player implements PlayerEntity{
+//public class Player implements Comparable<Player>, PlayerEntity{
 	
 	@Id
 	private long id;
@@ -30,8 +31,14 @@ public class Player implements Comparable<Player>{
 	private Integer roundsWon;
 	private Integer roundsLost;
 	private Integer roundsTied;	
-	@ManyToMany(cascade = CascadeType.ALL)
+	/*@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "player_defeated_players",
+	joinColumns = { @JoinColumn(name = "player_name") }, inverseJoinColumns = { @JoinColumn(name = "defeated_player_name") })
 	private List<Player> defeatedPlayers;
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "player_defeated_sim_players",
+	joinColumns = { @JoinColumn(name = "player_name") }, inverseJoinColumns = { @JoinColumn(name = "defeated_sim_player_name") })
+	private List<SimPlayer> defeatedSimPlayers;*/
 	
 	/**
 	 * Default constructor 
@@ -44,7 +51,8 @@ public class Player implements Comparable<Player>{
 		this.roundsWon = 0;
 		this.roundsLost = 0;
 		this.roundsTied = 0;		
-		this.defeatedPlayers = new ArrayList<Player>();
+		//this.defeatedPlayers = new ArrayList<Player>();
+		//this.defeatedSimPlayers = new ArrayList<SimPlayer>();
 	}
 		
 	/**
@@ -66,7 +74,8 @@ public class Player implements Comparable<Player>{
 		this.roundsWon = roundsWon;
 		this.roundsLost = roundsLost;
 		this.roundsTied = roundsTied;
-		this.defeatedPlayers = new ArrayList<Player>();
+		//this.defeatedPlayers = new ArrayList<Player>();
+		//this.defeatedSimPlayers = new ArrayList<SimPlayer>();
 	}
 
 	/**
@@ -78,8 +87,8 @@ public class Player implements Comparable<Player>{
 		return name;
 	}
 	
-	@Override
-	public int compareTo(Player player){
+	/*@Override	
+	public int compareTo(Player player){	
 		int retval = this.getName().compareTo(player.getName());
 		if (retval == 0){
 			if (this.getDefeatedPlayers().size() < player.getDefeatedPlayers().size()){
@@ -89,7 +98,7 @@ public class Player implements Comparable<Player>{
 			}			 
 		}		
 		return retval;
-	}	
+	}	*/
 		
 	/**
 	 * get id 
@@ -190,16 +199,32 @@ public class Player implements Comparable<Player>{
 	/**
 	 * get defeated players
 	 * @return defeatedPlayers as an ArrayList of Players
-	 */	
+	 *//*	
 	public List<Player> getDefeatedPlayers(){
 		return defeatedPlayers;
 	}
 	
-	/**
+	*//**
 	 * set defeated players
 	 * @param defeatedPlayers as an ArrayList of Players
-	 */
+	 *//*
 	public void setDefeatedPlayers(List<Player> defeatedPlayers){
 		this.defeatedPlayers = defeatedPlayers;
 	}
+
+	*//**
+	 * @return the defeatedSimPlayers
+	 *//*
+	public List<SimPlayer> getDefeatedSimPlayers() {
+		return defeatedSimPlayers;
+	}
+
+	*//**
+	 * @param defeatedSimPlayers the defeatedSimPlayers to set
+	 *//*
+	public void setDefeatedSimPlayers(List<SimPlayer> defeatedSimPlayers) {
+		this.defeatedSimPlayers = defeatedSimPlayers;
+	}
+	*/
+	
 }

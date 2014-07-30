@@ -27,7 +27,10 @@ import javax.swing.event.ListSelectionListener;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.BracketTableModel;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Gestures;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.PlayerEntity;
@@ -62,7 +65,7 @@ public class RPSLSApplication extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

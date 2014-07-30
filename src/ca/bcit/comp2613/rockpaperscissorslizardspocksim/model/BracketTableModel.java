@@ -1,4 +1,4 @@
-package ca.bcit.comp2613.rockpaperscissorslizardspocksim;
+package ca.bcit.comp2613.rockpaperscissorslizardspocksim.model;
 
 import javax.swing.table.DefaultTableModel;
 

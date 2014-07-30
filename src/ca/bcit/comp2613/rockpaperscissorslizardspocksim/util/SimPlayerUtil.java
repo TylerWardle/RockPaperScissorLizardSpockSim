@@ -10,7 +10,7 @@ import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
 public class SimPlayerUtil {
 	
 	public static SimPlayer generateSimPlayer(List<PlayerEntity> players){			
-		return new SimPlayer(PlayerUtil.getMaxID(players) + 1 , PlayerUtil.generateName(),0,0,0,0,Gestures.getRandomGesture());			
+		return new SimPlayer(PlayerEntityUtil.getMaxID(players) + 1 , PlayerEntityUtil.generateName(),0,0,0,0,Gestures.getRandomGesture());			
 	}
 
 }

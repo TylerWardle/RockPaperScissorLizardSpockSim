@@ -28,14 +28,10 @@ import org.h2.tools.Server;
 // blank username and password
 //
 // see also: http://stackoverflow.com/questions/17803718/view-content-of-embedded-h2-database-started-by-spring
-/*
- * <bean id="h2Server" class="org.h2.tools.Server" factory-method="createTcpServer" init-method="start" destroy-method="stop" depends-on="h2WebServer">
-    <constructor-arg value="-tcp,-tcpAllowOthers,-tcpPort,9092"/>
-</bean>
-<bean id="h2WebServer" class="org.h2.tools.Server" factory-method="createWebServer" init-method="start" destroy-method="stop">
-    <constructor-arg value="-web,-webAllowOthers,-webPort,8082"/>
-</bean>
+
+/**
+ * Used to auto configure an in memory database for object storage
+ * @author Tyler Wardle
  */
-public class H2Config {
-	
+public class H2Config {	
 }

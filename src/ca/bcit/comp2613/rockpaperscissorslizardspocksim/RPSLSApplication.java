@@ -39,8 +39,24 @@ import ca.bcit.comp2613.rockpaperscissorslizardspocksim.repository.PlayerReposit
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.repository.SimPlayerRepository;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.BracketFullException;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.DuplicatePlayerException;
-import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.PlayerUtil;
+import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.PlayerEntityUtil;
 
+/**
+ * @author Tyler Wardle
+ * @version July 30, 2014
+ * Generates a Swing frame view for the rockpaperscissorslizardspock application
+ * Executes all control for the gameplay. Contains the main class for execution. 
+ * 
+ *
+ */
+/**
+ * @author twardle
+ *
+ */
+/**
+ * @author twardle
+ *
+ */
 public class RPSLSApplication extends JFrame {
 
 	private JPanel contentPane;	
@@ -77,7 +93,11 @@ public class RPSLSApplication extends JFrame {
 			}
 		});
 	}
-	
+	/**
+	 * Creates a copy of elements from an iterator<T> and returns the copy
+	 * @param iter as an iterator
+	 * @return copy as a List<T>
+	 */
 	public static <T> List<T> copyIterator(Iterator<T> iter) {
 		List<T> copy = new ArrayList<T>();
 		while (iter.hasNext())
@@ -86,7 +106,8 @@ public class RPSLSApplication extends JFrame {
 	}
 	
 	/**
-	 * Create the frame.
+	 * Initialize the the application and start the in memory H2database.
+	 * Display introduction/Help 
 	 */
 	public RPSLSApplication() {		
 		tables = new ArrayList<BracketTableModel>();
@@ -118,6 +139,14 @@ public class RPSLSApplication extends JFrame {
 		
 	}
 	
+	/**
+	 * Initializes the tables which hold the players as the tournament is played.
+	 * sets action listeners for table selection which will populate the display 
+	 * fields with the selected player info.
+	 * 
+	 * @param selectedTable as a JTable
+	 * @param fillPlayers as a List<PlayerEntity>
+	 */
 	private void initTable(final JTable selectedTable, final List<PlayerEntity> fillPlayers) {
 
 		selectedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -134,6 +163,11 @@ public class RPSLSApplication extends JFrame {
 		refreshTable();
 	}
 	
+	/**
+	 * Retrieves SimPlayers and Players in the tournament from their respective repositories
+	 * and adds them to a returned ArrayList of PlayerEntity 
+	 * @return allPlayers as a List<PlayerEntity>
+	 */
 	public List<PlayerEntity> getPlayerEntitiesInBracket(){
 		ArrayList<PlayerEntity> allPlayers = new ArrayList<PlayerEntity>();
 		allPlayers.addAll(copyIterator(playerRepository.findAll().iterator()));
@@ -141,6 +175,10 @@ public class RPSLSApplication extends JFrame {
 		return allPlayers;
 	}
 	
+	/**
+	 * Populates the fields with the PlayerEntity in the selected table row
+	 * @param selectedTable as a JTable
+	 */
 	public void populateFields(JTable selectedTable){
 		Iterator<PlayerEntity> iterator = bracket.get(0).iterator();		
 		try {
@@ -165,10 +203,12 @@ public class RPSLSApplication extends JFrame {
 		} catch (Exception e) {}
 	}
 	
+	/**
+	 * Refreshes all tables with the current PlayerEntities 
+	 */
 	public void refreshTable(){	
 		int i = 0;
-		for (BracketTableModel bracketTable: tables){
-			//bracket.set(0, copyIterator(playerRepository.findAll().iterator()));
+		for (BracketTableModel bracketTable: tables){			
 			bracket.set(0, getPlayerEntitiesInBracket());
 			bracketTable.setDataVector(getSelectedData(bracket.get(i)), columnNames);				
 			tableRounds.get(i).repaint();
@@ -176,6 +216,11 @@ public class RPSLSApplication extends JFrame {
 		}
 	}	
 	
+	/**
+	 * Builds a 2d Object list of all relevent data in the input List of PlayerEntity and returns it
+	 * @param playerRoster as a List<PlayerEntity>
+	 * @return data as an Object[][]
+	 */
 	public Object[][] getSelectedData(List<PlayerEntity> playerRoster){
 		Object[][] data = null;
 		
@@ -192,6 +237,10 @@ public class RPSLSApplication extends JFrame {
 		return data;
 	}
 	
+	/**
+	 * Executed when the Play button is pressed. Executes a tournament of RPSLS and displays the winner.
+	 * 
+	 */
 	public void play(){		
 		int round = 1;
 		fillBracket();				
@@ -220,6 +269,14 @@ public class RPSLSApplication extends JFrame {
 		}
 	}
 	
+	/**
+	 * Executes one round of play in an tournament of RPSLS.
+	 * Players from the inputed list are paired of against each other,
+	 * the winner is added to the return winner list, and scores are updated. 
+	 * 
+	 * @param players as a List<PlayerEntity>
+	 * @return roundWinners as a List<PlayerEntity>
+	 */
 	public List<PlayerEntity> executeRound(List<PlayerEntity> players){
 		Iterator<PlayerEntity> player = players.iterator();
 		
@@ -252,6 +309,16 @@ public class RPSLSApplication extends JFrame {
 		return roundWinners;
 	}
 	
+	/**
+	 * Determines the winner and updates the scores of two players based on their gesture throws.
+	 * returns the winner or null if a tie. 
+	 * 
+	 * @param playerOne as a PlayerEntity
+	 * @param playerTwo as a PlayerEntity
+	 * @param playerOneThrow as a Gesture
+	 * @param playerTwoThrow as a Gesture
+	 * @return winner as a PlayerEntity
+	 */
 	public PlayerEntity updateScore(PlayerEntity playerOne, PlayerEntity playerTwo, Gestures playerOneThrow, Gestures playerTwoThrow){
 		
 		playerOne.setRoundsPlayed(playerOne.getRoundsPlayed()+1);
@@ -261,8 +328,7 @@ public class RPSLSApplication extends JFrame {
 			playerOne.setRoundsTied(playerOne.getRoundsTied()+1);
 			playerTwo.setRoundsTied(playerTwo.getRoundsTied()+1);
 			return null;
-		}else if(playerOneThrow.getDefeatingGestures().contains(playerTwoThrow)){
-			//txtGesture.setText(playerTwo.getName() + " Wins!");
+		}else if(playerOneThrow.getDefeatingGestures().contains(playerTwoThrow)){			
 			playerOne.setRoundsLost(playerOne.getRoundsLost()+1);
 			playerTwo.setRoundsWon(playerTwo.getRoundsWon()+1);
 			//if (playerOne instanceof Player){
@@ -270,8 +336,7 @@ public class RPSLSApplication extends JFrame {
 			//}
 			//playerTwo.getDefeatedSimPlayers().add((SimPlayer) playerOne);			
 			return playerTwo;
-		}else{
-			//txtGesture.setText(playerOne.getName() + " Wins!");
+		}else{			
 			playerOne.setRoundsWon(playerOne.getRoundsWon()+1);
 			playerTwo.setRoundsLost(playerTwo.getRoundsLost()+1);
 			//if (playerTwo instanceof Player){
@@ -283,16 +348,27 @@ public class RPSLSApplication extends JFrame {
 		
 	}
 	
+	/**
+	 * Fills the remaining spaces in the starting tournament bracket with Simulated players 
+	 * to achieve the full eight players for a tournament.
+	 */
 	public void fillBracket(){
 		while (bracket.get(0).size() < BRACKET_SIZE){
 			SimPlayer simPlayer = new SimPlayer();
-			simPlayer = PlayerUtil.generateSimPlayer(bracket.get(0));
+			simPlayer = PlayerEntityUtil.generateSimPlayer(bracket.get(0));
 			bracket.get(0).add(simPlayer);
 			simPlayerRepository.save(simPlayer);
 		}
 		refreshTable();
 	}
 	
+	/**
+	 * Gets a players gesture throw. Live players are prompted for their throw
+	 * while simulated players throws are generated at random and 50% of the time a simulated player throws 
+	 * their gestureBias as a throw. 
+	 * @param player as a PlayerEntity
+	 * @return throw as a Gesture
+	 */
 	public Gestures getPlayersThrow(PlayerEntity player){
 		Random random = new Random();
 		if(player instanceof SimPlayer){
@@ -313,6 +389,92 @@ public class RPSLSApplication extends JFrame {
 		}
 	}
 	
+	/**
+	 * Creates a new player and adds them to the starting bracket.
+	 * throws errors if the bracket already contains eight players or if a player by that name already exists in the bracket.
+	 * @throws DuplicatePlayerException
+	 * @throws BracketFullException
+	 */
+	public void doCreate() throws DuplicatePlayerException, BracketFullException{			
+		if (playerName != null){
+			if(bracket.get(0).size()>= BRACKET_SIZE){
+				throw new BracketFullException();
+			}else if (playerRepository.findByName(playerName.getText()) != null){
+				throw new DuplicatePlayerException(playerRepository.findByName(playerName.getText()));
+			}							
+			Player player = new Player();		
+			player.setName(playerName.getText());
+			player.setId(PlayerEntityUtil.getMaxID(bracket.get(0))+1);
+			playerRepository.save(player);
+			refreshTable();			
+		}
+	}		
+	
+	/**
+	 * Update the selected players name. Throws an exception if the new name already exists  
+	 * @throws DuplicatePlayerException
+	 */
+	public void doUpdate() throws DuplicatePlayerException{
+		
+		if (playerName != null){				
+			if (playerRepository.findByName(playerName.getText()) != null || simPlayerRepository.findByName(playerName.getText())!= null){
+				throw new DuplicatePlayerException(playerRepository.findByName(playerName.getText()));
+			}				
+			if (playerRepository.findOne(Long.valueOf(id.getText())) != null){
+				Player player = playerRepository.findOne(Long.valueOf(id.getText()));
+				player.setName(playerName.getText());
+				playerRepository.save(player);				
+			}else{
+				SimPlayer simPlayer = simPlayerRepository.findOne(Long.valueOf(id.getText()));
+				simPlayer.setName(playerName.getText());
+				simPlayerRepository.save(simPlayer);	
+			}
+		}			
+		refreshTable();
+	}
+	
+	/**
+	 * Delete the player currently selected in the tables 
+	 */
+	public void doDelete(){
+		if (playerRepository.findByName(playerName.getText()) != null){
+			playerRepository.delete(Long.valueOf(id.getText()));	
+		}else{
+			simPlayerRepository.delete(Long.valueOf(id.getText()));
+		}
+		refreshTable();
+	}
+	
+	/**
+	 * Initialize the empty bracket to the correct size 
+	 */
+	public void initializeEmptyBracket(){
+		bracket = new ArrayList<List<PlayerEntity>>();
+		int roundSize = BRACKET_SIZE;				
+		while( roundSize >= 1){
+			bracket.add(new ArrayList<PlayerEntity>(roundSize));			
+			roundSize /= 2; 
+		}
+	}
+	
+	/**
+	 * Display a intro/help message
+	 */
+	public void displayHelp(){
+		JOptionPane.showMessageDialog(null,"Welcome to Rock Paper Scissors Lizard Spock!\n\n"
+				+ " -Create up to eight live players by typing a new name in the \"Player Name\" box and pressing \"New Player\".\n"
+				
+				+ " -You can edit and delete players in the tournament roster with the \"Delete Player\" and \"Update Player\" buttons.\n\n"
+				
+				+ " -When you are ready to start press the \"PLAY\" button and the tournament will begin, any extra spots will be filled \n"
+				+ "  with simulated players.\n\n"
+				
+				+ " To see this information again press the HELP button. Enjoy!","Help", 1);
+	}
+	
+	/**
+	 * Initialize the swing view and build the frame
+	 */
 	public void initializeView(){
 		
 		setTitle("Rock Paper Scissors Lizard Spock");		
@@ -493,105 +655,5 @@ public class RPSLSApplication extends JFrame {
 				displayHelp();
 			}
 		});
-	}
-	
-	public void doCreate() throws DuplicatePlayerException, BracketFullException{			
-		if (playerName != null){
-			if(bracket.get(0).size()>= BRACKET_SIZE){
-				throw new BracketFullException();
-			}else if (playerRepository.findByName(playerName.getText()) != null){
-				throw new DuplicatePlayerException(playerRepository.findByName(playerName.getText()));
-			}							
-			Player player = new Player();		
-			player.setName(playerName.getText());
-			player.setId(PlayerUtil.getMaxID(bracket.get(0))+1);
-			playerRepository.save(player);
-			refreshTable();			
-		}
-	}		
-	
-	public void doUpdate() throws DuplicatePlayerException{
-		
-		/*int rounds =0;
-		int won =0;
-		int	lost =0;
-		int tied =0;
-		Gestures gesture = Gestures.getRandomGesture();
-		boolean playerFound = false;
-		boolean nPCPlayer = false;*/
-		
-		if (playerName != null){	
-			//for(PlayerEntity player : bracket.get(0)){
-			//	if(player.getName().equals(playerName.getText())){
-			//		throw new DuplicatePlayerException(player);					
-			//	}
-			//}	
-			if (playerRepository.findByName(playerName.getText()) != null || simPlayerRepository.findByName(playerName.getText())!= null){
-				throw new DuplicatePlayerException(playerRepository.findByName(playerName.getText()));
-			}	
-			
-			if (playerRepository.findOne(Long.valueOf(id.getText())) != null){
-				Player player = playerRepository.findOne(Long.valueOf(id.getText()));
-				player.setName(playerName.getText());
-				playerRepository.save(player);				
-			}else{
-				SimPlayer simPlayer = simPlayerRepository.findOne(Long.valueOf(id.getText()));
-				simPlayer.setName(playerName.getText());
-				simPlayerRepository.save(simPlayer);	
-			}	
-					
-			/*for (PlayerEntity currentPlayer: bracket.get(0)){
-				if (currentPlayer.getId() == Integer.valueOf(id.getText())){
-					rounds = currentPlayer.getRoundsPlayed(); 
-					won = currentPlayer.getRoundsWon(); 
-					lost = currentPlayer.getRoundsLost();
-					tied = currentPlayer.getRoundsTied();
-					playerFound = true;
-					if (currentPlayer instanceof SimPlayer){
-						nPCPlayer = true;
-						gesture = ((SimPlayer) currentPlayer).getGestureBias();		
-					}
-				}	
-			}	
-			if(playerFound){
-				if (nPCPlayer){
-					SimPlayer updatePlayer = new SimPlayer(Integer.valueOf(id.getText()),
-							playerName.getText(),rounds, won, lost, tied, gesture);
-					PlayerUtil.updatePlayer(bracket.get(0), updatePlayer);
-				}else{
-					Player updatePlayer = new Player(Integer.valueOf(id.getText()),
-							playerName.getText(),rounds, won, lost, tied);
-					PlayerUtil.updatePlayer(bracket.get(0), updatePlayer);
-				}			
-			}*/
-		}			
-		refreshTable();
-	}
-	
-	public void doDelete(){
-		if (playerRepository.findByName(playerName.getText()) != null){
-			playerRepository.delete(Long.valueOf(id.getText()));	
-		}else{
-			simPlayerRepository.delete(Long.valueOf(id.getText()));
-		}
-		refreshTable();
-	}
-	
-	public void initializeEmptyBracket(){
-		bracket = new ArrayList<List<PlayerEntity>>();
-		int roundSize = BRACKET_SIZE;				
-		while( roundSize >= 1){
-			bracket.add(new ArrayList<PlayerEntity>(roundSize));			
-			roundSize /= 2; 
-		}
-	}
-	
-	public void displayHelp(){
-		JOptionPane.showMessageDialog(null,"Welcome to Rock Paper Scissors Lizard Spock!\n"
-				+ " Create up to eight new players and when you're ready to start press PLAY.\n"
-				+ " You can edit and delete players in the tournament roster with the DELETE \n"
-				+ " and UPDATE buttons. Any unfilled spots in the roster will be filled with \n"
-				+ " randomly generated simulated players when you press PLAY. \n"
-				+ " To see this information again press the HELP button. Enjoy!","Help", 1);
-	}
+	}	
 }

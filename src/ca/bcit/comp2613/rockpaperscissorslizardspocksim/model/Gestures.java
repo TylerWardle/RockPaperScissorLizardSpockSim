@@ -18,7 +18,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 /**
- * @author A00913377 Tyler Wardle
+ * @author Tyler Wardle
  * @version July 21, 2014
  * Gestures is an enum class which generates objects representing valid RPSLS gestures 
  */

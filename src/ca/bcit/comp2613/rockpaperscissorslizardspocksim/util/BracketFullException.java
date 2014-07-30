@@ -1,5 +1,11 @@
 package ca.bcit.comp2613.rockpaperscissorslizardspocksim.util;
 
+/**
+ * An exception to throw when the bracket is full
+ * @author Tyler Wardle
+ * @version July 30 2014
+ *
+ */
 public class BracketFullException extends RuntimeException {
 	
 	/**

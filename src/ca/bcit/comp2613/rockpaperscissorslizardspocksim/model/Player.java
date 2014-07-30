@@ -16,7 +16,8 @@ import org.hibernate.annotations.FetchMode;
 
 
 /**
- * @author A00913377 Tyler Wardle
+ * @author Tyler Wardle
+ * @version July 30, 2014
  * generates objects which represent RPSLS players 
  */
 

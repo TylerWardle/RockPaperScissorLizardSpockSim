@@ -10,11 +10,13 @@ import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.PlayerEntity;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.Player;
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.model.SimPlayer;
 
-public class PlayerUtil{
-	   
-	/**
- 	* @param players is a list of players to be populated as an ArrayList of type Player
- 	*/
+/**
+ * A static class which helps generate random player entities and other functions 
+ * @author Tyler Wardle
+ * @version July 30 2014
+ *  *
+ */
+public class PlayerEntityUtil{	
 	
 	private static int RANDOM_NAME_LENGTH = 3;
 	private static int MAX_GAMES = 0;
@@ -22,7 +24,7 @@ public class PlayerUtil{
 		/**
 		 * default constructor
 		 */
-		public PlayerUtil(){		
+		public PlayerEntityUtil(){		
 		}
 		
 	
@@ -48,6 +50,11 @@ public class PlayerUtil{
 			return players;			
 		}
 		
+		/**
+		 * Generates a unique random SimPlayer
+		 * @param players as a List<PlayerEntity>
+		 * @return simPlayer as a SimPlayer
+		 */
 		public static SimPlayer generateSimPlayer(List<PlayerEntity> players){			
 			return new SimPlayer(getMaxID(players) + 1 , generateName(),0,0,0,0,Gestures.getRandomGesture());			
 		}
@@ -59,23 +66,23 @@ public class PlayerUtil{
 		public static String generateName(){
 			Random random = new Random();
 			String alphabet = "abcdefghijklmnopqrstuvbxyz";
-			String name = "";
-			//boolean uniqueName = false;
+			String name = "";			
 			int letterIndex;
-			
-			//while (!uniqueName){
-				name = "";
-				for (int i = 0; i < RANDOM_NAME_LENGTH; i++){			
-					letterIndex = random.nextInt(alphabet.length());
-					name = name.concat(alphabet.substring(letterIndex,letterIndex + 1));								
-				}
-			//	if(findPlayerByName(name).isEmpty()){
-			//		uniqueName = true;
-			//	}
-			//}
+			name = "";
+			for (int i = 0; i < RANDOM_NAME_LENGTH; i++){			
+				letterIndex = random.nextInt(alphabet.length());
+				name = name.concat(alphabet.substring(letterIndex,letterIndex + 1));								
+			}			
 			return name;
 		}
 		
+		/**
+		 * delete a player from a List<PlayerEntity>
+		 * @deprecated data is stored in an H2 database now and database calls are used to delete
+		 * 
+		 * @param players as a List<PlayerEntity>
+		 * @param player as a PlayerEntity
+		 */
 		public static void deletePlayer(List<PlayerEntity> players, PlayerEntity player) {
 			Iterator<PlayerEntity> iterator = players.iterator();
 			while (iterator.hasNext()) {
@@ -87,6 +94,13 @@ public class PlayerUtil{
 			}
 		}
 		
+		/**
+		 * Update a player from a List<PlayerEntity>
+		 * @deprecated data is stored in an H2 database now and database calls are used to update
+		 * 
+		 * @param players as a List<PlayerEntity>
+		 * @param player as a PlayerEntity
+		 */
 		public static void updatePlayer(List<PlayerEntity> players, PlayerEntity player){
 			Iterator<PlayerEntity> iterator = players.iterator();
 			while (iterator.hasNext()) {
@@ -101,6 +115,11 @@ public class PlayerUtil{
 			}
 		}
 		
+		/**
+		 * get the maximum id of players in the bracket
+		 * @param players as a List<PlayerEntity>
+		 * @return maxID as a long
+		 */
 		public static long getMaxID(List<PlayerEntity> players){
 			long maxID = 0;
 			for(PlayerEntity player : players){

@@ -16,7 +16,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 /**
- * @author A00913377 Tyler Wardle
+ * @author Tyler Wardle
+ * @version July 30 2014
  * generates objects which represent simulated RPSLS players
  */
 @Entity
@@ -59,6 +60,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 	
 	/**
+	 * Overloaded constructor
 	 * @param id as a long
 	 * @param name as a String
 	 * @param roundsPlayer as an int
@@ -83,7 +85,8 @@ public class SimPlayer implements PlayerEntity {
 	}
 	
 	/**
-	 * overide toString method
+	 * override toString method
+	 * @return name as a String
 	 */
 	public String toString(){
 		return name;
@@ -119,6 +122,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * get id
 	 * @return the id
 	 */
 	public long getId() {
@@ -126,6 +130,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * set id
 	 * @param id the id to set
 	 */
 	public void setId(long id) {
@@ -133,6 +138,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * get name
 	 * @return the name
 	 */
 	public String getName() {
@@ -140,6 +146,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * set name 
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -147,6 +154,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * get roundsPlayed
 	 * @return the roundsPlayed
 	 */
 	public Integer getRoundsPlayed() {
@@ -154,6 +162,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * set roundsPlayed
 	 * @param roundsPlayed the roundsPlayed to set
 	 */
 	public void setRoundsPlayed(Integer roundsPlayed) {
@@ -161,6 +170,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * get roundsWon
 	 * @return the roundsWon
 	 */
 	public Integer getRoundsWon() {
@@ -168,6 +178,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * set roundsWon
 	 * @param roundsWon the roundsWon to set
 	 */
 	public void setRoundsWon(Integer roundsWon) {
@@ -175,6 +186,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * get roundsLost
 	 * @return the roundsLost
 	 */
 	public Integer getRoundsLost() {
@@ -182,6 +194,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * set roundsLost
 	 * @param roundsLost the roundsLost to set
 	 */
 	public void setRoundsLost(Integer roundsLost) {
@@ -189,6 +202,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * get roundsTied
 	 * @return the roundsTied
 	 */
 	public Integer getRoundsTied() {
@@ -196,6 +210,7 @@ public class SimPlayer implements PlayerEntity {
 	}
 
 	/**
+	 * set roundsTied
 	 * @param roundsTied the roundsTied to set
 	 */
 	public void setRoundsTied(Integer roundsTied) {

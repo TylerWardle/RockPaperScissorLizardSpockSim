@@ -42,20 +42,10 @@ import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.DuplicatePlayerExce
 import ca.bcit.comp2613.rockpaperscissorslizardspocksim.util.PlayerEntityUtil;
 
 /**
- * @author Tyler Wardle
- * @version July 30, 2014
  * Generates a Swing frame view for the rockpaperscissorslizardspock application
  * Executes all control for the gameplay. Contains the main class for execution. 
- * 
- *
- */
-/**
- * @author twardle
- *
- */
-/**
- * @author twardle
- *
+ * @author Tyler Wardle
+ * @version July 30, 2014
  */
 public class RPSLSApplication extends JFrame {
 
@@ -320,6 +310,7 @@ public class RPSLSApplication extends JFrame {
 	 * @return winner as a PlayerEntity
 	 */
 	public PlayerEntity updateScore(PlayerEntity playerOne, PlayerEntity playerTwo, Gestures playerOneThrow, Gestures playerTwoThrow){
+		PlayerEntity winner;
 		
 		playerOne.setRoundsPlayed(playerOne.getRoundsPlayed()+1);
 		playerTwo.setRoundsPlayed(playerTwo.getRoundsPlayed()+1);
@@ -327,7 +318,7 @@ public class RPSLSApplication extends JFrame {
 		if (playerOneThrow == playerTwoThrow){
 			playerOne.setRoundsTied(playerOne.getRoundsTied()+1);
 			playerTwo.setRoundsTied(playerTwo.getRoundsTied()+1);
-			return null;
+			winner = null;
 		}else if(playerOneThrow.getDefeatingGestures().contains(playerTwoThrow)){			
 			playerOne.setRoundsLost(playerOne.getRoundsLost()+1);
 			playerTwo.setRoundsWon(playerTwo.getRoundsWon()+1);
@@ -335,7 +326,7 @@ public class RPSLSApplication extends JFrame {
 			//	playerTwo.getDefeatedPlayers().add((Player) playerOne);
 			//}
 			//playerTwo.getDefeatedSimPlayers().add((SimPlayer) playerOne);			
-			return playerTwo;
+			winner = playerTwo;
 		}else{			
 			playerOne.setRoundsWon(playerOne.getRoundsWon()+1);
 			playerTwo.setRoundsLost(playerTwo.getRoundsLost()+1);
@@ -343,9 +334,20 @@ public class RPSLSApplication extends JFrame {
 			//	playerOne.getDefeatedPlayers().add((Player)playerTwo);
 			//}
 			//simPlayerRepository.findOne(playerOne.getId()).getDefeatedSimPlayers().add((SimPlayer)playerTwo);			
-			return playerOne;
-		}
+			winner = playerOne;
+		}		
+		savePlayer(playerOne);
+		savePlayer(playerTwo);
+		return winner;
 		
+	}
+	
+	public void savePlayer(PlayerEntity player){
+		if (player instanceof SimPlayer){
+			simPlayerRepository.save((SimPlayer)player);
+		}else{
+			playerRepository.save((Player)player);
+		}
 	}
 	
 	/**
@@ -415,34 +417,37 @@ public class RPSLSApplication extends JFrame {
 	 * @throws DuplicatePlayerException
 	 */
 	public void doUpdate() throws DuplicatePlayerException{
-		
-		if (playerName != null){				
-			if (playerRepository.findByName(playerName.getText()) != null || simPlayerRepository.findByName(playerName.getText())!= null){
-				throw new DuplicatePlayerException(playerRepository.findByName(playerName.getText()));
-			}				
-			if (playerRepository.findOne(Long.valueOf(id.getText())) != null){
-				Player player = playerRepository.findOne(Long.valueOf(id.getText()));
-				player.setName(playerName.getText());
-				playerRepository.save(player);				
-			}else{
-				SimPlayer simPlayer = simPlayerRepository.findOne(Long.valueOf(id.getText()));
-				simPlayer.setName(playerName.getText());
-				simPlayerRepository.save(simPlayer);	
-			}
-		}			
-		refreshTable();
+		if (!playerName.getText().equals("")){
+			if (playerName != null){				
+				if (playerRepository.findByName(playerName.getText()) != null || simPlayerRepository.findByName(playerName.getText())!= null){
+					throw new DuplicatePlayerException(playerRepository.findByName(playerName.getText()));
+				}				
+				if (playerRepository.findOne(Long.valueOf(id.getText())) != null){
+					Player player = playerRepository.findOne(Long.valueOf(id.getText()));
+					player.setName(playerName.getText());
+					playerRepository.save(player);				
+				}else{
+					SimPlayer simPlayer = simPlayerRepository.findOne(Long.valueOf(id.getText()));
+					simPlayer.setName(playerName.getText());
+					simPlayerRepository.save(simPlayer);	
+				}
+			}			
+			refreshTable();
+		}
 	}
 	
 	/**
 	 * Delete the player currently selected in the tables 
 	 */
 	public void doDelete(){
-		if (playerRepository.findByName(playerName.getText()) != null){
-			playerRepository.delete(Long.valueOf(id.getText()));	
-		}else{
-			simPlayerRepository.delete(Long.valueOf(id.getText()));
+		if (!playerName.getText().equals("")){
+			if (playerRepository.findByName(playerName.getText()) != null){
+				playerRepository.delete(Long.valueOf(id.getText()));	
+			}else{
+				simPlayerRepository.delete(Long.valueOf(id.getText()));
+			}
+			refreshTable();
 		}
-		refreshTable();
 	}
 	
 	/**
@@ -462,7 +467,7 @@ public class RPSLSApplication extends JFrame {
 	 */
 	public void displayHelp(){
 		JOptionPane.showMessageDialog(null,"Welcome to Rock Paper Scissors Lizard Spock!\n\n"
-				+ " -Create up to eight live players by typing a new name in the \"Player Name\" box and pressing \"New Player\".\n"
+				+ " -Create up to eight live players by typing a new name in the \"Player Name\" box and pressing \"New Player\".\n\n"
 				
 				+ " -You can edit and delete players in the tournament roster with the \"Delete Player\" and \"Update Player\" buttons.\n\n"
 				

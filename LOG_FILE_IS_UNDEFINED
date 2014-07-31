@@ -45,3 +45,6 @@ Error starting ApplicationContext. To display the auto-configuration report enab
 2014-07-30 19:09:26.814  INFO 6440 [AWT-EventQueue-0] --- j.LocalContainerEntityManagerFactoryBean : Building JPA container EntityManagerFactory for persistence unit 'default'
 2014-07-30 19:09:31.480  INFO 6440 [AWT-EventQueue-0] --- o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup
 2014-07-30 19:09:31.524  INFO 6440 [AWT-EventQueue-0] --- o.s.boot.SpringApplication               : Started application in 9.777 seconds (JVM running for 11.06)
+2014-07-30 19:14:23.785  INFO 6440 [Thread-2] --- s.c.a.AnnotationConfigApplicationContext : Closing org.springframework.context.annotation.AnnotationConfigApplicationContext@8cc1102: startup date [Wed Jul 30 19:09:22 PDT 2014]; root of context hierarchy
+2014-07-30 19:14:23.789  INFO 6440 [Thread-2] --- o.s.j.e.a.AnnotationMBeanExporter        : Unregistering JMX-exposed beans on shutdown
+2014-07-30 19:14:23.794  INFO 6440 [Thread-2] --- j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'

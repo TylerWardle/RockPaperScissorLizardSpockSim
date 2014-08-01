@@ -1,34 +1,66 @@
+<!doctype html>
 <html>
-<body>
-<H1>Rock Paper Scissors Lizard Spock Tournament Application</H1>
-<div>
-by Tyler Wardle <a target="_blank" "href="mailto: t.leo.wardle@gmail.com">t.leo.wardle@gmail.com</a><br>
-last modified on July 30/2014
-</div>
-<br/>
-Welcome to my landing page for my Rock Paper Scissors Lizard Spock Tournament Application!<br/>
-The application simulates a single elimination tournament of RPSLS <br/><br/>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Rock Paper Scissor Lizard Spock Sim by TylerWardle</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-Basically, you can add, remove or update players in the starting bracket <br/>
-and when you are ready, play some RPSLS with live and simulated players<br/>
-This application is powered by Swing backed by a H2 DB.<br/>
-If you wish to see the data persisted to H2, open up the local console after the application has started.<br/>
-URL: <a href="http://localhost:8082">http://localhost:8082</a> (H2 will start a server for you)<br/>
-and login with the following settings:<br/>
-<pre>
-Generic H2 (Embedded)
-org.h2.Driver
-jdbc:h2:mem:testdb
-blank username and password
-</pre>
-<hr/>
- Click <a href="rockpaperscissorslizardspocksim.zip">here</a> to download my application.  After you unzip this application into a suitable folder, "cd" into that directory and run:<br/>
-<pre>
-java -jar rockpaperscissorslizardspocksim-0.0.1-SNAPSHOT.jar
-</pre><br/>
-<hr/>
-The code for this project can be found via github <a href="https://github.com/TylerWardle/RockPaperScissorLizardSpockSim">here</a>
-<hr/>
-</body>
+  </head>
+  <body>
 
+      <header>
+        <h1>Rock Paper Scissor Lizard Spock Sim</h1>
+        <p>Play a single elimination tournament of RPSLS with a random number of simulated opponents</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/TylerWardle/RockPaperScissorLizardSpockSim" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/TylerWardle/RockPaperScissorLizardSpockSim/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/TylerWardle/RockPaperScissorLizardSpockSim/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <p>Welcome to my landing page for my Rock Paper Scissors Lizard Spock Tournament Application!This application simulates a single elimination tournament of RPSLS.</p>
+
+<p>Basically, you can add, remove or update players in the starting bracket and when you are ready, play some RPSLS with live and simulated players. This application is powered by Swing backed by a H2 DB. If you wish to see the data persisted to H2, open up the local console after the application has started.</p>
+
+<p>URL: http://localhost:8082 (H2 will start a server for you) and login with the following settings:</p>
+
+<ul>
+<li>Generic H2 (Embedded)</li>
+<li>org.h2.Driver</li>
+<li>jdbc:h2:mem:testdb</li>
+<li>blank username and password</li>
+</ul><p>Click <a href="http://tylerwardle.github.io/RockPaperScissorLizardSpockSim/rockpaperscissorslizardspocksim.zip">here</a> to download my application. After you unzip this application into a suitable folder, "cd" into that directory and run:
+java -jar rockpaperscissorslizardspocksim-0.0.1-SNAPSHOT.jar</p>
+
+<p>The code for this project can be found via github <a href="https://github.com/TylerWardle/RockPaperScissorLizardSpockSim">here</a></p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/TylerWardle">TylerWardle</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
 </html>
